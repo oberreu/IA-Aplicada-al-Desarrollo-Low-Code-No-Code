@@ -120,7 +120,7 @@ let state = {
   updatedAt: null
 };
 
-const panels = ["setupPanel", "assessmentPanel", "resultsPanel"];
+const panels = ["homePanel", "setupPanel", "assessmentPanel", "resultsPanel"];
 
 document.addEventListener("DOMContentLoaded", () => {
   loadState();
@@ -151,6 +151,8 @@ function bindEvents() {
   document.getElementById("exportBtn").addEventListener("click", exportResults);
   document.getElementById("resetBtn").addEventListener("click", resetAssessment);
   document.getElementById("loadSampleBtn").addEventListener("click", loadSampleData);
+  document.getElementById("startFromHomeBtn").addEventListener("click", () => showPanel("setupPanel"));
+  document.getElementById("sampleFromHomeBtn").addEventListener("click", loadSampleData);
 
   bindChoiceGroup("providerChoices", "provider");
   bindChoiceGroup("roleChoices", "role");

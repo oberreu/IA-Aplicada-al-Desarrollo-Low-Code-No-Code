@@ -23,16 +23,20 @@
 
   <main class="shell">
     <aside class="sidebar" aria-label="Navegación del assessment">
-      <button class="nav-item active" data-panel="setupPanel" type="button">
+      <button class="nav-item active" data-panel="homePanel" type="button">
         <span>01</span>
+        Inicio
+      </button>
+      <button class="nav-item" data-panel="setupPanel" type="button">
+        <span>02</span>
         Configuración
       </button>
       <button class="nav-item" data-panel="assessmentPanel" type="button">
-        <span>02</span>
+        <span>03</span>
         Evaluación
       </button>
       <button class="nav-item" data-panel="resultsPanel" type="button">
-        <span>03</span>
+        <span>04</span>
         Resultados
       </button>
       <div class="progress-card">
@@ -45,14 +49,124 @@
     </aside>
 
     <section class="workspace">
-      <section class="panel active" id="setupPanel">
+      <section class="panel active" id="homePanel">
+        <div class="home-hero">
+          <div class="home-copy">
+            <span class="eyebrow">Cloud Security · AI Governance · CSA CCM</span>
+            <h2>Evalúa la postura de gobierno y seguridad de IA sobre una base cloud confiable</h2>
+            <p>
+              Plataforma funcional basada en controles CSA CCM para ayudar a organizaciones a diagnosticar riesgos,
+              evidenciar controles y priorizar mejoras en iniciativas de Inteligencia Artificial desplegadas sobre entornos cloud.
+            </p>
+            <div class="home-actions">
+              <button class="primary-button compact" id="startFromHomeBtn" type="button">Iniciar assessment</button>
+              <button class="ghost-button" id="sampleFromHomeBtn" type="button">Cargar caso de referencia</button>
+            </div>
+          </div>
+          <div class="home-status" aria-label="Estado de la plataforma">
+            <div>
+              <span>Modo</span>
+              <strong>Prototipo funcional</strong>
+            </div>
+            <div>
+              <span>Base de control</span>
+              <strong>CSA CCM v4.1</strong>
+            </div>
+            <div>
+              <span>Persistencia</span>
+              <strong>Navegador local</strong>
+            </div>
+            <div>
+              <span>API externa</span>
+              <strong>No requerida</strong>
+            </div>
+          </div>
+        </div>
+
+        <section class="executive-intro">
+          <p>
+            La Inteligencia Artificial introduce nuevos riesgos, pero rara vez opera de forma aislada.
+            Sus aplicaciones dependen de servicios cloud, APIs, identidades, datos, logs, proveedores,
+            configuraciones y procesos de gobierno. Por eso, una evaluación efectiva de seguridad de IA
+            debe partir desde una pregunta fundamental: ¿la organización cuenta con una base cloud
+            suficientemente gobernada, trazable y auditable para soportar estos casos de uso?
+          </p>
+          <p>
+            Esta plataforma transforma una selección priorizada de controles del
+            <strong>CSA Cloud Controls Matrix v4.1</strong> en una experiencia guiada de assessment.
+            El usuario puede registrar contexto organizacional, evaluar controles relevantes, asociar
+            evidencia, obtener un score de madurez y generar recomendaciones accionables.
+          </p>
+        </section>
+
+        <section class="value-grid" aria-label="Bloques de valor">
+          <article class="value-card">
+            <span>01</span>
+            <h3>Gobierno y responsabilidad</h3>
+            <p>Clarifica roles, responsabilidades, políticas y criterios de riesgo para iniciativas de IA en cloud.</p>
+          </article>
+          <article class="value-card">
+            <span>02</span>
+            <h3>Seguridad técnica</h3>
+            <p>Evalúa controles relacionados con aplicaciones, APIs, datos, monitoreo y protección de servicios.</p>
+          </article>
+          <article class="value-card">
+            <span>03</span>
+            <h3>Evidencia y trazabilidad</h3>
+            <p>Conecta respuestas del assessment con evidencia documental, configuraciones, reportes o hallazgos.</p>
+          </article>
+          <article class="value-card">
+            <span>04</span>
+            <h3>Mejora continua</h3>
+            <p>Prioriza brechas y propone un roadmap 30/60/90 para evolucionar hacia mayor madurez.</p>
+          </article>
+        </section>
+
+        <section class="flow-strip" aria-label="Flujo principal">
+          <strong>Flujo principal</strong>
+          <span>Configurar contexto</span>
+          <span>Evaluar controles</span>
+          <span>Registrar evidencia</span>
+          <span>Ver dashboard</span>
+          <span>Exportar resultados</span>
+        </section>
+
+        <section class="scope-grid">
+          <article class="scope-box">
+            <h3>Incluye</h3>
+            <ul>
+              <li>Assessment funcional reducido.</li>
+              <li>Controles priorizados desde CCM.</li>
+              <li>Contexto de organización y rol cloud.</li>
+              <li>Registro de evidencia por control.</li>
+              <li>Score global, brechas y roadmap.</li>
+            </ul>
+          </article>
+          <article class="scope-box">
+            <h3>No incluye</h3>
+            <ul>
+              <li>Certificación CSA.</li>
+              <li>Auditoría formal.</li>
+              <li>Integración real con tenants cloud.</li>
+              <li>Validación automática de evidencia.</li>
+              <li>Reemplazo del juicio experto.</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="audience-band">
+          <strong>Diseñado para</strong>
+          <span>líderes de GRC, CISO, Risk & Compliance, Cloud Security Architects y responsables de Gobierno de IA.</span>
+        </section>
+      </section>
+
+      <section class="panel" id="setupPanel">
         <div class="hero">
           <span class="eyebrow">Proyecto Módulo 4 · Low-Code / No-Code</span>
-          <h2>Evalúa una muestra AICM con evidencia, scoring y recomendaciones.</h2>
+          <h2>Configura el contexto del assessment</h2>
           <p>
-            Esta versión convierte el prototipo anterior en una herramienta operativa acotada:
-            captura contexto de la organización, registra respuestas por control, guarda avance localmente,
-            calcula madurez y exporta resultados.
+            Define organización, sector, responsable, rol y proveedor cloud principal antes de evaluar controles.
+            El contexto permite interpretar hallazgos, evidencia y recomendaciones con mayor precisión.
           </p>
         </div>
 
