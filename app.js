@@ -1,100 +1,162 @@
 const STORAGE_KEY = "csaLatamAicmModulo4State";
 
 const controls = [
+  // --- Governance, Risk and Compliance (GRC) ---
   {
     id: "GRC-01",
-    domain: "Gobierno, Riesgo y Cumplimiento",
-    title: "Política de gobierno de IA",
-    question: "¿Existe una política aprobada que defina responsabilidades, uso permitido, riesgos y controles mínimos para sistemas de IA?",
-    evidenceHint: "Política de IA, acta de aprobación, matriz RACI o estándar interno publicado.",
+    domain: "Governance, Risk and Compliance",
+    title: "Governance Program Policy and Procedures",
+    question: "¿La organización ha establecido, documentado, aprobado y comunicado políticas y procedimientos para un programa de gobierno de la información que incluya sistemas de IA, con revisión al menos anual?",
+    evidenceHint: "Política de gobierno de IA aprobada, acta de aprobación, matriz RACI, estándar interno publicado, registro de revisiones.",
     weight: 1
   },
   {
     id: "GRC-02",
-    domain: "Gobierno, Riesgo y Cumplimiento",
-    title: "Inventario de casos de uso",
-    question: "¿La organización mantiene un inventario actualizado de casos de uso de IA, owners, criticidad y datos utilizados?",
-    evidenceHint: "Registro de aplicaciones/modelos, inventario de proveedores, clasificación de criticidad.",
-    weight: 1
-  },
-  {
-    id: "GRC-03",
-    domain: "Gobierno, Riesgo y Cumplimiento",
-    title: "Evaluación de riesgo de IA",
-    question: "¿Los casos de uso de IA pasan por una evaluación de riesgo antes de producción o uso operativo?",
-    evidenceHint: "Formulario de risk assessment, criterios de aceptación, aprobaciones de riesgo.",
+    domain: "Governance, Risk and Compliance",
+    title: "Risk Management Program",
+    question: "¿Existe un programa formal y documentado de gestión de riesgos de IA (AIRM) patrocinado por la dirección, que incluya identificación, evaluación, tratamiento y aceptación de riesgos?",
+    evidenceHint: "Programa AIRM documentado, registro de riesgos, criterios de aceptación, aprobaciones de riesgo, owner por riesgo.",
     weight: 1.2
   },
   {
-    id: "AIS-01",
-    domain: "Seguridad de Aplicaciones e Interfaces",
-    title: "Validación de entrada",
-    question: "¿La aplicación valida entradas para reducir prompt injection, instrucciones maliciosas, datos inválidos o uso fuera de política?",
-    evidenceHint: "Pruebas de seguridad, reglas de validación, filtros, guardrails o casos negativos documentados.",
-    weight: 1.1
-  },
-  {
-    id: "AIS-02",
-    domain: "Seguridad de Aplicaciones e Interfaces",
-    title: "Seguridad de APIs",
-    question: "¿Las APIs usadas por el sistema de IA tienen autenticación, autorización, gestión de claves y revisión periódica?",
-    evidenceHint: "Configuración de API gateway, rotación de claves, pruebas de autorización, logs de acceso.",
-    weight: 1
-  },
-  {
-    id: "AIS-03",
-    domain: "Seguridad de Aplicaciones e Interfaces",
-    title: "Separación de instrucciones y datos",
-    question: "¿El sistema diferencia instrucciones de sistema, instrucciones de usuario y datos para evitar comportamientos no deseados?",
-    evidenceHint: "Diseño de prompts, pruebas adversariales, documentación de arquitectura o controles de contexto.",
-    weight: 1.1
-  },
-  {
-    id: "MDS-01",
-    domain: "Seguridad de Modelos y Datos",
-    title: "Protección de datos sensibles",
-    question: "¿Existen controles para evitar que datos personales, confidenciales o regulados sean enviados indebidamente a modelos de IA?",
-    evidenceHint: "Política DLP, clasificación de datos, anonimización, controles de privacidad o revisión legal.",
+    id: "GRC-10",
+    domain: "Governance, Risk and Compliance",
+    title: "AI Impact Assessment",
+    question: "¿Se ha establecido y comunicado un proceso de AI Impact Assessment con criterios para evaluar regularmente los impactos éticos, sociales, operativos, legales y de seguridad del sistema de IA a lo largo de su ciclo de vida?",
+    evidenceHint: "Proceso de AI Impact Assessment documentado, criterios de evaluación, reportes de impacto, registros de stakeholders notificados.",
     weight: 1.2
   },
   {
-    id: "MDS-02",
-    domain: "Seguridad de Modelos y Datos",
-    title: "Monitoreo de uso y salidas",
-    question: "¿Se monitorean eventos, respuestas y anomalías relevantes para detectar abuso, errores o exposición de información?",
-    evidenceHint: "Logs, alertas, tablero de monitoreo, métricas de seguridad o revisiones periódicas.",
+    id: "GRC-15",
+    domain: "Governance, Risk and Compliance",
+    title: "Human Supervision",
+    question: "¿Existen procesos, procedimientos y medidas técnicas para asegurar la supervisión y control humano del sistema de IA en cumplimiento con requisitos regulatorios y gestión de riesgos organizacional?",
+    evidenceHint: "Procedimiento de human-in-the-loop, escalamiento, umbrales de intervención, evidencia de override humano.",
+    weight: 1.1
+  },
+  // --- Application & Interface Security (AIS) ---
+  {
+    id: "AIS-08",
+    domain: "Application & Interface Security",
+    title: "Input Validation",
+    question: "¿Se validan, filtran, modifican o bloquean las entradas contra patrones adversariales, patrones de fallo y comportamiento no deseado según las políticas organizacionales y regulaciones aplicables?",
+    evidenceHint: "Reglas de validación, filtros de prompt injection, guardrails, pruebas de seguridad de inputs, casos negativos documentados.",
+    weight: 1.1
+  },
+  {
+    id: "AIS-09",
+    domain: "Application & Interface Security",
+    title: "Output Validation",
+    question: "¿Se validan, filtran, modifican o bloquean las salidas del modelo contra patrones adversariales, patrones de fallo y comportamiento no deseado según las políticas organizacionales?",
+    evidenceHint: "Filtros de output, content safety, pruebas de salidas tóxicas/sensibles, mecanismos de redacción automática.",
+    weight: 1.1
+  },
+  {
+    id: "AIS-10",
+    domain: "Application & Interface Security",
+    title: "API Security",
+    question: "¿Se han definido e implementado procesos, procedimientos y medidas técnicas para asegurar las APIs, con revisión al menos anual o ante cambios significativos?",
+    evidenceHint: "API gateway configurado, autenticación/autorización, rotación de claves, rate limiting, logs de acceso a APIs.",
     weight: 1
   },
   {
-    id: "MDS-03",
-    domain: "Seguridad de Modelos y Datos",
-    title: "Gestión de proveedores de modelos",
-    question: "¿Los proveedores de modelos o servicios de IA son evaluados con criterios de seguridad, privacidad y cumplimiento?",
-    evidenceHint: "Due diligence, cuestionarios de terceros, contrato, DPA, evaluación de residencia de datos.",
+    id: "AIS-15",
+    domain: "Application & Interface Security",
+    title: "Prompt Differentiation",
+    question: "¿Se implementan mecanismos que permitan al modelo distinguir claramente entre instrucciones del usuario, datos e instrucciones de sistema (system prompts)?",
+    evidenceHint: "Arquitectura de prompts documentada, separación system/user/data, pruebas de indirect prompt injection, controles de contexto.",
+    weight: 1.1
+  },
+  // --- Data Security and Privacy Lifecycle Management (DSP) ---
+  {
+    id: "DSP-17",
+    domain: "Data Security & Privacy Lifecycle",
+    title: "Sensitive Data Protection",
+    question: "¿Se han definido e implementado procesos, procedimientos y medidas técnicas para proteger datos sensibles a lo largo de su ciclo de vida en el contexto del sistema de IA?",
+    evidenceHint: "Política DLP, clasificación de datos, anonimización, controles de privacidad, PII detection, revisión legal.",
+    weight: 1.2
+  },
+  {
+    id: "DSP-20",
+    domain: "Data Security & Privacy Lifecycle",
+    title: "Data Provenance and Transparency",
+    question: "¿Se documentan y trazan las fuentes de datos utilizadas por el modelo, y se hace disponible la información de procedencia según requisitos legales y regulatorios?",
+    evidenceHint: "Registro de fuentes de datos, data lineage, documentación de datasets de entrenamiento, disclosure de proveniencia.",
     weight: 1
   },
+  {
+    id: "DSP-21",
+    domain: "Data Security & Privacy Lifecycle",
+    title: "Data Poisoning Prevention & Detection",
+    question: "¿Se han definido, implementado y evaluado procesos y medidas técnicas para prevenir data poisoning en modelos de IA y detectarlo de forma continua?",
+    evidenceHint: "Controles de integridad de datos de entrenamiento, monitoreo de anomalías en datasets, validación de fuentes, alertas de drift.",
+    weight: 1.1
+  },
+  // --- Logging and Monitoring (LOG) ---
   {
     id: "LOG-01",
-    domain: "Gobierno, Riesgo y Cumplimiento",
-    title: "Trazabilidad de decisiones",
-    question: "¿Las decisiones relevantes del sistema de IA quedan trazadas con usuario, fecha, entrada, salida y versión/configuración usada?",
-    evidenceHint: "Logs de auditoría, correlación de eventos, registros de prompts o metadatos de modelo.",
-    weight: 1.1
-  },
-  {
-    id: "LOG-02",
-    domain: "Gobierno, Riesgo y Cumplimiento",
-    title: "Evidencia para auditoría",
-    question: "¿La organización puede reunir evidencia suficiente para acreditar cumplimiento de los controles evaluados?",
-    evidenceHint: "Repositorio de evidencias, tickets, reportes, actas de comité y evidencia técnica exportable.",
+    domain: "Logging and Monitoring",
+    title: "Logging and Monitoring Policy and Procedures",
+    question: "¿Se han establecido, documentado, aprobado y comunicado políticas y procedimientos de logging y monitoreo, con revisión al menos anual o ante cambios significativos?",
+    evidenceHint: "Política de logging aprobada, estándares de retención, procedimientos de revisión, registro de cambios.",
     weight: 1
   },
   {
-    id: "LOG-03",
-    domain: "Gobierno, Riesgo y Cumplimiento",
-    title: "Revisión periódica",
-    question: "¿Existe una revisión periódica de controles de IA con seguimiento de hallazgos y planes de remediación?",
-    evidenceHint: "Minutas, tablero de hallazgos, plan de remediación, owners y fechas comprometidas.",
+    id: "LOG-14",
+    domain: "Logging and Monitoring",
+    title: "Input Monitoring",
+    question: "¿Se registran y monitorean todos los eventos de entrada (contenido y metadata) para habilitar auditoría y reporting sobre el uso de modelos de IA?",
+    evidenceHint: "Logs de prompts/inputs, metadata de sesión, correlación de eventos, sistema de auditoría de entradas.",
+    weight: 1.1
+  },
+  {
+    id: "LOG-15",
+    domain: "Logging and Monitoring",
+    title: "Output Monitoring",
+    question: "¿Se registran y monitorean todos los eventos de salida (contenido y metadata) para habilitar auditoría y reporting sobre el uso de modelos de IA?",
+    evidenceHint: "Logs de respuestas/outputs, alertas de contenido anómalo, dashboards de monitoreo, métricas de calidad.",
+    weight: 1.1
+  },
+  // --- Model Security (MDS) ---
+  {
+    id: "MDS-01",
+    domain: "Model Security",
+    title: "Training Pipeline Security",
+    question: "¿Se han definido, implementado y evaluado políticas, procedimientos y medidas técnicas que aseguren la seguridad del pipeline de entrenamiento, con revisión periódica ante nuevas amenazas?",
+    evidenceHint: "Seguridad de pipeline ML, controles de acceso a datos de training, validación de integridad, hardening de infraestructura.",
+    weight: 1.1
+  },
+  {
+    id: "MDS-06",
+    domain: "Model Security",
+    title: "Adversarial Attack Analysis",
+    question: "¿Se han definido, implementado y evaluado procesos y medidas técnicas para evaluar amenazas adversariales específicas para cada modelo de IA?",
+    evidenceHint: "Red teaming de modelos, pruebas adversariales, análisis de robustez, documentación de vectores de ataque.",
+    weight: 1.1
+  },
+  {
+    id: "MDS-10",
+    domain: "Model Security",
+    title: "Model Continuous Monitoring",
+    question: "¿Se han definido e implementado procesos y medidas técnicas para el monitoreo continuo de métricas de rendimiento del modelo, detectando cambios inesperados o degradación?",
+    evidenceHint: "Dashboards de model performance, alertas de drift, métricas de accuracy/latency, registros de retraining.",
+    weight: 1
+  },
+  // --- Audit & Assurance (A&A) ---
+  {
+    id: "A&A-01",
+    domain: "Audit & Assurance",
+    title: "Audit and Assurance Policy and Procedures",
+    question: "¿Se han establecido, documentado, aprobado y comunicado políticas y procedimientos de auditoría y aseguramiento, con revisión al menos anual o ante cambios significativos?",
+    evidenceHint: "Política de auditoría aprobada, plan anual de auditoría, estándares de referencia, actas de aprobación.",
+    weight: 1
+  },
+  {
+    id: "A&A-02",
+    domain: "Audit & Assurance",
+    title: "Independent Assessments",
+    question: "¿Se realizan evaluaciones independientes de auditoría y aseguramiento según estándares relevantes al menos anualmente?",
+    evidenceHint: "Reportes de auditoría independiente, certificaciones, informes de terceros, planes de remediación post-auditoría.",
     weight: 1
   }
 ];
@@ -512,23 +574,32 @@ function loadSampleData() {
     answers: {
       "GRC-01": "PARTIAL",
       "GRC-02": "YES",
-      "GRC-03": "NO",
-      "AIS-01": "PARTIAL",
-      "AIS-02": "YES",
-      "AIS-03": "NO",
+      "GRC-10": "NO",
+      "GRC-15": "PARTIAL",
+      "AIS-08": "PARTIAL",
+      "AIS-09": "NO",
+      "AIS-10": "YES",
+      "AIS-15": "NO",
+      "DSP-17": "PARTIAL",
+      "DSP-20": "NO",
+      "DSP-21": "NO",
+      "LOG-01": "PARTIAL",
+      "LOG-14": "NO",
+      "LOG-15": "NO",
       "MDS-01": "PARTIAL",
-      "MDS-02": "NO",
-      "MDS-03": "PARTIAL",
-      "LOG-01": "NO",
-      "LOG-02": "PARTIAL",
-      "LOG-03": "NO"
+      "MDS-06": "NO",
+      "MDS-10": "NO",
+      "A&A-01": "PARTIAL",
+      "A&A-02": "NO"
     },
     evidence: {
       "GRC-01": { type: "Política", status: "Parcial", notes: "Borrador aprobado por seguridad, pendiente comité de riesgo." },
-      "GRC-02": { type: "Log/Reporte", status: "Suficiente", notes: "Inventario inicial en planilla controlada por arquitectura." },
-      "GRC-03": { type: "Ticket/Acta", status: "Pendiente", notes: "No existe evaluación formal previa a producción." },
-      "AIS-01": { type: "Configuración", status: "Parcial", notes: "Validaciones básicas implementadas; faltan pruebas adversariales." },
-      "MDS-02": { type: "Log/Reporte", status: "Pendiente", notes: "Logs técnicos existen pero no hay alertas ni revisión periódica." }
+      "GRC-02": { type: "Log/Reporte", status: "Suficiente", notes: "Programa AIRM inicial documentado con registro de riesgos." },
+      "GRC-10": { type: "Ticket/Acta", status: "Pendiente", notes: "No existe AI Impact Assessment formal." },
+      "AIS-08": { type: "Configuración", status: "Parcial", notes: "Validaciones básicas implementadas; faltan pruebas adversariales." },
+      "DSP-17": { type: "Política", status: "Parcial", notes: "Clasificación de datos existe pero sin controles DLP específicos para IA." },
+      "LOG-14": { type: "Log/Reporte", status: "Pendiente", notes: "Logs técnicos existen pero no cubren inputs al modelo." },
+      "MDS-06": { type: "Ticket/Acta", status: "Pendiente", notes: "No se han realizado pruebas adversariales al modelo." }
     },
     updatedAt: new Date().toISOString()
   };
@@ -575,18 +646,26 @@ function loadState() {
 
 function domainDescription(domain) {
   const map = {
-    "Gobierno, Riesgo y Cumplimiento": "Define ownership, políticas, inventario, evaluación de riesgo, trazabilidad y evidencia para operar IA de forma gobernada.",
-    "Seguridad de Aplicaciones e Interfaces": "Revisa guardrails, APIs y controles técnicos que reducen abuso o comportamiento no deseado.",
-    "Seguridad de Modelos y Datos": "Evalúa protección de datos, monitoreo y gestión de proveedores de modelos o servicios de IA."
+    "Governance, Risk and Compliance": "Políticas de gobierno, gestión de riesgos de IA, AI Impact Assessment y supervisión humana (AICM GRC).",
+    "Application & Interface Security": "Validación de inputs/outputs, seguridad de APIs y diferenciación de instrucciones (AICM AIS).",
+    "Data Security & Privacy Lifecycle": "Protección de datos sensibles, proveniencia, transparencia y prevención de data poisoning (AICM DSP).",
+    "Logging and Monitoring": "Políticas de logging, monitoreo de entradas y salidas del modelo para auditoría (AICM LOG).",
+    "Model Security": "Seguridad del pipeline de entrenamiento, análisis adversarial y monitoreo continuo del modelo (AICM MDS).",
+    "Audit & Assurance": "Políticas de auditoría, evaluaciones independientes y cumplimiento de estándares (AICM A&A)."
   };
   return map[domain] || "";
 }
 
 function shortDomain(domain) {
-  return domain
-    .replace("Gobierno, Riesgo y Cumplimiento", "GRC")
-    .replace("Seguridad de Aplicaciones e Interfaces", "Aplicaciones")
-    .replace("Seguridad de Modelos y Datos", "Modelos/Datos");
+  const map = {
+    "Governance, Risk and Compliance": "GRC",
+    "Application & Interface Security": "AIS",
+    "Data Security & Privacy Lifecycle": "DSP",
+    "Logging and Monitoring": "LOG",
+    "Model Security": "MDS",
+    "Audit & Assurance": "A&A"
+  };
+  return map[domain] || domain;
 }
 
 function scoreColor(score) {

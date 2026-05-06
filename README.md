@@ -7,8 +7,9 @@ La herramienta permite ejecutar un assessment reducido basado en el CSA AI Contr
 ## Alcance
 
 - App estatica sin backend.
-- 12 controles priorizados en espanol.
-- 3 dominios funcionales: GRC, seguridad de aplicaciones y modelos/datos.
+- 19 controles oficiales del AICM v1.0.3 en espanol.
+- 6 dominios: GRC, AIS, DSP, LOG, MDS, A&A.
+- IDs de control alineados al framework oficial CSA.
 - Respuestas: Si, Parcial, No y N/A.
 - Registro de tipo, estado y descripcion de evidencia por control.
 - Guardado automatico en `localStorage`.
