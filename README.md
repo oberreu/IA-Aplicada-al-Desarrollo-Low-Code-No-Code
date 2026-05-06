@@ -31,6 +31,17 @@ Luego abre:
 http://localhost:8080
 ```
 
+## Publicacion con GitHub Pages
+
+Esta app funciona como sitio estatico desde la raiz del repositorio.
+
+Configuracion recomendada en GitHub:
+
+- Repository visibility: Public
+- Pages source: Deploy from a branch
+- Branch: `main`
+- Folder: `/root`
+
 ## Flujo principal
 
 1. Completar datos minimos de la organizacion.
