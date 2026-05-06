@@ -6,7 +6,7 @@
   <title>CSA LATAM AICM Evaluator 2.0</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="on-landing">
   <header class="topbar">
     <div class="brand">
       <div class="brand-mark">CSA</div>
@@ -20,7 +20,7 @@
     </div>
   </header>
 
-  <main class="shell">
+  <main class="shell landing-active">
     <aside class="sidebar" aria-label="Navegación del assessment">
       <button class="nav-item active" data-panel="homePanel" type="button">
         <span>01</span>
@@ -49,94 +49,36 @@
 
     <section class="workspace">
       <section class="panel active" id="homePanel">
-        <div class="home-hero">
-          <div class="home-copy">
-            <span class="eyebrow">Cloud Security · AI Governance · CSA AICM v1.0.3</span>
-            <h2>Evalúa la postura de seguridad y gobierno de IA con el AI Controls Matrix</h2>
+        <div class="landing">
+          <div class="landing-hero">
+            <span class="eyebrow">Cloud Security Alliance · AI Governance · AICM v1.0.3</span>
+            <h2>Evalúa la postura de seguridad en Cloud + IA de tu organización</h2>
             <p>
-              Plataforma funcional basada en el CSA AI Controls Matrix (AICM) v1.0.3 para ayudar a organizaciones a diagnosticar riesgos,
-              evidenciar controles y priorizar mejoras en iniciativas de Inteligencia Artificial desplegadas sobre entornos cloud.
+              Prototipo open source impulsado por el <strong>CSA LATAM Chapter</strong> para evaluar
+              postura de seguridad en Cloud + IA a partir del <strong>AI Controls Matrix (AICM) v1.0.3</strong>.
             </p>
-            <div class="home-actions">
-              <button class="primary-button compact" id="startFromHomeBtn" type="button">Iniciar assessment</button>
+            <p>
+              Recorre dominios de seguridad, responde preguntas de evaluación por control y usa un agente
+              contextual para explicar controles, evidencia esperada, brechas comunes y siguientes pasos de implementación.
+            </p>
+            <p class="landing-note">Prototipo funcional para la tarea del Módulo 4 de Low-Code / No-Code.</p>
+            <button class="primary-button" id="startFromHomeBtn" type="button">Iniciar assessment</button>
+          </div>
+          <div class="landing-features">
+            <div class="feature">
+              <strong>6 dominios</strong>
+              <span>GRC · AIS · DSP · LOG · MDS · A&A</span>
+            </div>
+            <div class="feature">
+              <strong>19 controles</strong>
+              <span>IDs oficiales del AICM v1.0.3</span>
+            </div>
+            <div class="feature">
+              <strong>Score automático</strong>
+              <span>Global, por dominio y roadmap 30/60/90</span>
             </div>
           </div>
         </div>
-
-        <section class="executive-intro">
-          <p>
-            La Inteligencia Artificial introduce nuevos riesgos que operan sobre servicios cloud, APIs,
-            identidades, datos, logs, proveedores y procesos de gobierno. El
-            <strong>AI Controls Matrix (AICM) v1.0.3</strong> de la Cloud Security Alliance define
-            243 controles en 18 dominios para gobernar y asegurar sistemas de IA.
-          </p>
-          <p>
-            Esta plataforma operacionaliza una selección priorizada de 19 controles AICM en 6 dominios
-            críticos, transformándolos en una experiencia guiada de assessment. El usuario puede
-            registrar contexto organizacional, evaluar controles, asociar evidencia, obtener un score
-            de madurez y generar recomendaciones accionables alineadas al framework TAISE.
-          </p>
-        </section>
-
-        <section class="value-grid" aria-label="Bloques de valor">
-          <article class="value-card">
-            <span>01</span>
-            <h3>Gobierno y responsabilidad</h3>
-            <p>Clarifica roles, responsabilidades, políticas y criterios de riesgo para iniciativas de IA en cloud.</p>
-          </article>
-          <article class="value-card">
-            <span>02</span>
-            <h3>Seguridad técnica</h3>
-            <p>Evalúa controles relacionados con aplicaciones, APIs, datos, monitoreo y protección de servicios.</p>
-          </article>
-          <article class="value-card">
-            <span>03</span>
-            <h3>Evidencia y trazabilidad</h3>
-            <p>Conecta respuestas del assessment con evidencia documental, configuraciones, reportes o hallazgos.</p>
-          </article>
-          <article class="value-card">
-            <span>04</span>
-            <h3>Mejora continua</h3>
-            <p>Prioriza brechas y propone un roadmap 30/60/90 para evolucionar hacia mayor madurez.</p>
-          </article>
-        </section>
-
-        <section class="flow-strip" aria-label="Flujo principal">
-          <strong>Flujo principal</strong>
-          <span>Configurar contexto</span>
-          <span>Evaluar controles</span>
-          <span>Registrar evidencia</span>
-          <span>Ver dashboard</span>
-          <span>Exportar resultados</span>
-        </section>
-
-        <section class="scope-grid">
-          <article class="scope-box">
-            <h3>Incluye</h3>
-            <ul>
-              <li>19 controles AICM v1.0.3 en 6 dominios.</li>
-              <li>IDs oficiales: GRC, AIS, DSP, LOG, MDS, A&A.</li>
-              <li>Contexto de organización y rol cloud.</li>
-              <li>Registro de evidencia por control.</li>
-              <li>Score global, por dominio, brechas y roadmap.</li>
-            </ul>
-          </article>
-          <article class="scope-box">
-            <h3>No incluye</h3>
-            <ul>
-              <li>Certificación CSA.</li>
-              <li>Auditoría formal.</li>
-              <li>Integración real con tenants cloud.</li>
-              <li>Validación automática de evidencia.</li>
-              <li>Reemplazo del juicio experto.</li>
-            </ul>
-          </article>
-        </section>
-
-        <section class="audience-band">
-          <strong>Diseñado para</strong>
-          <span>líderes de GRC, CISO, Risk & Compliance, Cloud Security Architects y responsables de Gobierno de IA.</span>
-        </section>
       </section>
 
       <section class="panel" id="setupPanel">

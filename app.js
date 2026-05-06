@@ -212,9 +212,7 @@ function bindEvents() {
 
   document.getElementById("exportBtn").addEventListener("click", exportResults);
   document.getElementById("resetBtn").addEventListener("click", resetAssessment);
-  document.getElementById("loadSampleBtn").addEventListener("click", loadSampleData);
   document.getElementById("startFromHomeBtn").addEventListener("click", () => showPanel("setupPanel"));
-  document.getElementById("sampleFromHomeBtn").addEventListener("click", loadSampleData);
 
   bindChoiceGroup("providerChoices", "provider");
   bindChoiceGroup("roleChoices", "role");
@@ -237,6 +235,8 @@ function showPanel(panelId) {
   document.querySelectorAll(".nav-item").forEach(item => {
     item.classList.toggle("active", item.dataset.panel === panelId);
   });
+  document.querySelector(".shell").classList.toggle("landing-active", panelId === "homePanel");
+  document.body.classList.toggle("on-landing", panelId === "homePanel");
   if (panelId === "resultsPanel") renderResults();
 }
 
