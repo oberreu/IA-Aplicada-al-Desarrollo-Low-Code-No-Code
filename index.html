@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSA LATAM AICM Evaluator 2.0</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">CSA</div>
+      <div>
+        <h1>CSA LATAM AICM Evaluator 2.0</h1>
+        <p>Assessment funcional reducido para gobierno y seguridad de Inteligencia Artificial</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="ghost-button" id="loadSampleBtn" type="button">Cargar caso de referencia</button>
+      <button class="danger-button" id="resetBtn" type="button">Reiniciar</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <aside class="sidebar" aria-label="Navegación del assessment">
+      <button class="nav-item active" data-panel="setupPanel" type="button">
+        <span>01</span>
+        Configuración
+      </button>
+      <button class="nav-item" data-panel="assessmentPanel" type="button">
+        <span>02</span>
+        Evaluación
+      </button>
+      <button class="nav-item" data-panel="resultsPanel" type="button">
+        <span>03</span>
+        Resultados
+      </button>
+      <div class="progress-card">
+        <strong id="progressLabel">0/12</strong>
+        <span>controles respondidos</span>
+        <div class="progress-track">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <section class="panel active" id="setupPanel">
+        <div class="hero">
+          <span class="eyebrow">Proyecto Módulo 4 · Low-Code / No-Code</span>
+          <h2>Evalúa una muestra AICM con evidencia, scoring y recomendaciones.</h2>
+          <p>
+            Esta versión convierte el prototipo anterior en una herramienta operativa acotada:
+            captura contexto de la organización, registra respuestas por control, guarda avance localmente,
+            calcula madurez y exporta resultados.
+          </p>
+        </div>
+
+        <form class="setup-form" id="setupForm" novalidate>
+          <div class="form-grid">
+            <label>
+              Organización
+              <input id="orgName" name="orgName" type="text" placeholder="Ej. Banco Andina S.A." required>
+            </label>
+            <label>
+              Sector
+              <select id="sector" name="sector" required>
+                <option value="">Seleccionar sector</option>
+                <option>Banca y servicios financieros</option>
+                <option>Salud</option>
+                <option>Gobierno</option>
+                <option>Telecomunicaciones</option>
+                <option>Retail</option>
+                <option>Tecnología</option>
+              </select>
+            </label>
+            <label>
+              País
+              <input id="country" name="country" type="text" placeholder="Ej. Chile" required>
+            </label>
+            <label>
+              Responsable
+              <input id="owner" name="owner" type="text" placeholder="Ej. Andrea, GRC Lead" required>
+            </label>
+          </div>
+
+          <div class="choice-group">
+            <div>
+              <h3>Proveedor cloud principal</h3>
+              <p>Se usa para contextualizar evidencia y recomendaciones.</p>
+            </div>
+            <div class="choice-row" id="providerChoices">
+              <button class="choice selected" data-value="Azure" type="button">Azure</button>
+              <button class="choice" data-value="AWS" type="button">AWS</button>
+              <button class="choice" data-value="Google Cloud" type="button">Google Cloud</button>
+            </div>
+          </div>
+
+          <div class="choice-group">
+            <div>
+              <h3>Rol evaluado</h3>
+              <p>Perfil AICM simplificado para el assessment.</p>
+            </div>
+            <div class="choice-row" id="roleChoices">
+              <button class="choice selected" data-value="AI Client" type="button">Cliente IA</button>
+              <button class="choice" data-value="Application Provider" type="button">Proveedor app</button>
+              <button class="choice" data-value="Cloud Service Provider" type="button">Proveedor cloud</button>
+            </div>
+          </div>
+
+          <p class="form-error" id="setupError" role="alert"></p>
+          <button class="primary-button" type="submit">Iniciar evaluación</button>
+        </form>
+      </section>
+
+      <section class="panel" id="assessmentPanel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow">Evaluación guiada</span>
+            <h2>Controles priorizados AICM</h2>
+            <p>Responde cada control y registra la evidencia disponible. El progreso se guarda automáticamente.</p>
+          </div>
+          <button class="primary-button compact" id="viewResultsBtn" type="button">Ver resultados</button>
+        </div>
+        <div id="controlsContainer" class="domains"></div>
+      </section>
+
+      <section class="panel" id="resultsPanel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow">Dashboard ejecutivo</span>
+            <h2>Resultados del assessment</h2>
+            <p id="resultsIntro">Completa la evaluación para generar resultados.</p>
+          </div>
+          <button class="primary-button compact" id="exportBtn" type="button">Exportar JSON</button>
+        </div>
+        <div id="resultsContainer"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
