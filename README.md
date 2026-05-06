@@ -15,7 +15,17 @@ La herramienta permite ejecutar un assessment reducido basado en el CSA AI Contr
 - Dashboard con score global, score por dominio, brechas y roadmap 30/60/90.
 - Exportacion JSON.
 
-## Uso
+## Inicio rapido
+
+Para ver la version publica recomendada, abre:
+
+```text
+https://oberreu.github.io/IA-Aplicada-al-Desarrollo-Low-Code-No-Code/
+```
+
+Esa URL carga la herramienta funcional publicada con GitHub Pages.
+
+## Uso local
 
 Abre `index.html` en el navegador.
 
