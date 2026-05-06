@@ -35,11 +35,11 @@ http://localhost:8080
 
 Esta app funciona como sitio estatico desde la raiz del repositorio.
 
-Configuracion recomendada en GitHub:
+Configuracion actual en GitHub:
 
 - Repository visibility: Public
 - Pages source: Deploy from a branch
-- Branch: `main`
+- Branch: `gh-pages`
 - Folder: `/root`
 
 ## Flujo principal
