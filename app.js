@@ -8,6 +8,12 @@ const controls = [
     title: "Governance Program Policy and Procedures",
     question: "¿La organización ha establecido, documentado, aprobado y comunicado políticas y procedimientos para un programa de gobierno de la información que incluya sistemas de IA, con revisión al menos anual?",
     evidenceHint: "Política de gobierno de IA aprobada, acta de aprobación, matriz RACI, estándar interno publicado, registro de revisiones.",
+    auditingGuidelines: [
+      "Verificar que existe una estrategia integral de gobierno de la información que incluya liderazgo sponsor y uso responsable de IA.",
+      "Confirmar que las políticas se revisan y actualizan al menos anualmente con evidencia documentada del proceso y aprobación.",
+      "Verificar que las políticas requieren revisión de evidencia de cumplimiento de proveedores antes de integrar servicios de IA.",
+      "Confirmar que las actualizaciones incluyen responsabilidades de monitoreo de cumplimiento de proveedores."
+    ],
     weight: 1
   },
   {
@@ -16,6 +22,12 @@ const controls = [
     title: "Risk Management Program",
     question: "¿Existe un programa formal y documentado de gestión de riesgos de IA (AIRM) patrocinado por la dirección, que incluya identificación, evaluación, tratamiento y aceptación de riesgos?",
     evidenceHint: "Programa AIRM documentado, registro de riesgos, criterios de aceptación, aprobaciones de riesgo, owner por riesgo.",
+    auditingGuidelines: [
+      "Verificar que existe un programa AIRM formal, documentado y aprobado por la dirección ejecutiva.",
+      "Confirmar que incluye procedimientos para identificar, evaluar, asignar ownership, tratar y aceptar riesgos de servicios de IA de terceros.",
+      "Verificar que considera riesgos como mal uso del modelo, falta de explicabilidad, residencia de datos y dependencia de modelos opacos.",
+      "Evaluar si el programa AIRM se alinea con el framework de gobierno de IA y la estrategia de riesgo empresarial."
+    ],
     weight: 1.2
   },
   {
@@ -24,6 +36,12 @@ const controls = [
     title: "AI Impact Assessment",
     question: "¿Se ha establecido y comunicado un proceso de AI Impact Assessment con criterios para evaluar regularmente los impactos éticos, sociales, operativos, legales y de seguridad del sistema de IA a lo largo de su ciclo de vida?",
     evidenceHint: "Proceso de AI Impact Assessment documentado, criterios de evaluación, reportes de impacto, registros de stakeholders notificados.",
+    auditingGuidelines: [
+      "Verificar que existe un proceso de AI Impact Assessment documentado y alineado con la tolerancia al riesgo organizacional.",
+      "Verificar los criterios de evaluación y mecanismo de scoring para dimensiones de riesgo: ético, social, legal, operativo y de seguridad.",
+      "Evaluar cómo la metodología de impacto evalúa efectos diferenciales en distintas aplicaciones downstream.",
+      "Verificar el proceso para identificar stakeholders y cómo se comunican los resultados e incorpora su feedback."
+    ],
     weight: 1.2
   },
   {
@@ -32,6 +50,12 @@ const controls = [
     title: "Human Supervision",
     question: "¿Existen procesos, procedimientos y medidas técnicas para asegurar la supervisión y control humano del sistema de IA en cumplimiento con requisitos regulatorios y gestión de riesgos organizacional?",
     evidenceHint: "Procedimiento de human-in-the-loop, escalamiento, umbrales de intervención, evidencia de override humano.",
+    auditingGuidelines: [
+      "Verificar que existen procesos documentados para que operadores humanos supervisen el funcionamiento y rendimiento del sistema de IA.",
+      "Examinar el cumplimiento de los procesos con requisitos regulatorios y mejores prácticas de la industria.",
+      "Confirmar que adoptan un enfoque basado en riesgo y están implementados concretamente por los responsables.",
+      "Inspeccionar si se monitorean con métricas de eficacia y se revisan periódicamente."
+    ],
     weight: 1.1
   },
   // --- Application & Interface Security (AIS) ---
@@ -41,6 +65,13 @@ const controls = [
     title: "Input Validation",
     question: "¿Se validan, filtran, modifican o bloquean las entradas contra patrones adversariales, patrones de fallo y comportamiento no deseado según las políticas organizacionales y regulaciones aplicables?",
     evidenceHint: "Reglas de validación, filtros de prompt injection, guardrails, pruebas de seguridad de inputs, casos negativos documentados.",
+    auditingGuidelines: [
+      "Verificar que existen políticas y controles explícitos para validar inputs adversariales específicos al caso de uso.",
+      "Evaluar los mecanismos de validación de entrada incluyendo ataques lingüísticos, de tokens y multimodales.",
+      "Verificar que se realizan ejercicios de AI Red Teaming enfocados en validación de inputs contra escenarios adversariales.",
+      "Confirmar que los hallazgos del Red Team se traducen en mejoras continuas de los controles de validación.",
+      "Verificar que se monitorea la efectividad de la validación con métricas relevantes actualizadas regularmente."
+    ],
     weight: 1.1
   },
   {
@@ -49,6 +80,13 @@ const controls = [
     title: "Output Validation",
     question: "¿Se validan, filtran, modifican o bloquean las salidas del modelo contra patrones adversariales, patrones de fallo y comportamiento no deseado según las políticas organizacionales?",
     evidenceHint: "Filtros de output, content safety, pruebas de salidas tóxicas/sensibles, mecanismos de redacción automática.",
+    auditingGuidelines: [
+      "Confirmar que existen políticas y controles para validar outputs contra comportamientos inseguros o adversariales.",
+      "Verificar que los mecanismos de validación de salida cubren insecure output handling y excessive agency.",
+      "Verificar que se realizan ejercicios de AI Red Teaming que evalúan la efectividad de la validación de outputs.",
+      "Confirmar que se monitorea activamente la efectividad con métricas diseñadas para detectar riesgos de outputs adversariales.",
+      "Verificar que los controles se revisan y actualizan ante nuevas amenazas y hallazgos de Red Teaming."
+    ],
     weight: 1.1
   },
   {
@@ -57,6 +95,11 @@ const controls = [
     title: "API Security",
     question: "¿Se han definido e implementado procesos, procedimientos y medidas técnicas para asegurar las APIs, con revisión al menos anual o ante cambios significativos?",
     evidenceHint: "API gateway configurado, autenticación/autorización, rotación de claves, rate limiting, logs de acceso a APIs.",
+    auditingGuidelines: [
+      "Verificar que existen medidas y procesos para asegurar APIs con mecanismos de gestión de claves y autorización.",
+      "Verificar la evaluación de riesgos de la cadena de suministro de APIs (análisis de composición, reportes de vulnerabilidades).",
+      "Confirmar que los procesos y medidas se revisan al menos anualmente y después de cambios significativos."
+    ],
     weight: 1
   },
   {
@@ -65,6 +108,14 @@ const controls = [
     title: "Prompt Differentiation",
     question: "¿Se implementan mecanismos que permitan al modelo distinguir claramente entre instrucciones del usuario, datos e instrucciones de sistema (system prompts)?",
     evidenceHint: "Arquitectura de prompts documentada, separación system/user/data, pruebas de indirect prompt injection, controles de contexto.",
+    auditingGuidelines: [
+      "Verificar el uso consistente de tokens o formatos estructurados para etiquetar input de usuario e instrucciones de sistema.",
+      "Examinar cómo se procesa el input del usuario y verificar que se escapan caracteres de control correctamente.",
+      "Verificar la separación contextual en las estructuras de request/response de API.",
+      "Verificar el uso efectivo de delimitadores para separar partes del prompt.",
+      "Analizar la resistencia del modelo a intentos de override de instrucciones de sistema desde el input de usuario.",
+      "Revisar diferenciación visual en la UI entre áreas de input y guía del sistema."
+    ],
     weight: 1.1
   },
   // --- Data Security and Privacy Lifecycle Management (DSP) ---
@@ -74,6 +125,14 @@ const controls = [
     title: "Sensitive Data Protection",
     question: "¿Se han definido e implementado procesos, procedimientos y medidas técnicas para proteger datos sensibles a lo largo de su ciclo de vida en el contexto del sistema de IA?",
     evidenceHint: "Política DLP, clasificación de datos, anonimización, controles de privacidad, PII detection, revisión legal.",
+    auditingGuidelines: [
+      "Verificar que las políticas internas de uso de IA incluyen guías de privacidad para datos sensibles consumidos por sistemas GenAI.",
+      "Verificar que los roles y responsabilidades para gestionar riesgos de privacidad están claramente asignados.",
+      "Verificar que las políticas de clasificación y manejo cubren datos enviados a herramientas de IA de terceros.",
+      "Verificar los controles a lo largo del ciclo de vida de datos compartidos con proveedores de GenAI.",
+      "Verificar si la organización ha documentado incidentes de exposición de datos por herramientas GenAI y las acciones de seguimiento.",
+      "Verificar que la gestión de riesgos de IA incluye evaluaciones de bias, explicabilidad y privacidad antes del deployment."
+    ],
     weight: 1.2
   },
   {
@@ -82,6 +141,14 @@ const controls = [
     title: "Data Provenance and Transparency",
     question: "¿Se documentan y trazan las fuentes de datos utilizadas por el modelo, y se hace disponible la información de procedencia según requisitos legales y regulatorios?",
     evidenceHint: "Registro de fuentes de datos, data lineage, documentación de datasets de entrenamiento, disclosure de proveniencia.",
+    auditingGuidelines: [
+      "Verificar que todas las fuentes de datos usadas en despliegues de IA están identificadas y documentadas.",
+      "Verificar que los registros de lineage muestran cómo los datos se mueven a través del ciclo de vida de IA.",
+      "Verificar que se mantienen registros de proveniencia para cualquier transformación o generación de datos sintéticos.",
+      "Verificar que el acceso y modificación de datos de IA son rastreados por sistemas de monitoreo automatizado.",
+      "Verificar que se aplica versionamiento a datasets, configuraciones de modelo y logs de inferencia.",
+      "Verificar que existe un proceso auditable para disclosure de datos a reguladores cuando sea requerido."
+    ],
     weight: 1
   },
   {
@@ -90,6 +157,14 @@ const controls = [
     title: "Data Poisoning Prevention & Detection",
     question: "¿Se han definido, implementado y evaluado procesos y medidas técnicas para prevenir data poisoning en modelos de IA y detectarlo de forma continua?",
     evidenceHint: "Controles de integridad de datos de entrenamiento, monitoreo de anomalías en datasets, validación de fuentes, alertas de drift.",
+    auditingGuidelines: [
+      "Verificar que las fuentes de datos proporcionadas a sistemas de IA son validadas para prevenir ingesta de datos maliciosos.",
+      "Verificar que existen procesos de aseguramiento de calidad para identificar y remover datos corruptos o sospechosos.",
+      "Verificar que hay herramientas de monitoreo automatizado para detectar patrones anómalos indicativos de envenenamiento.",
+      "Verificar que los controles de acceso previenen modificación o inserción no autorizada de datos usados en IA.",
+      "Verificar que el plan de respuesta a incidentes cubre amenazas de data poisoning con detección, reporte y remediación.",
+      "Verificar que los empleados están capacitados para reconocer potenciales amenazas de envenenamiento de datos."
+    ],
     weight: 1.1
   },
   // --- Logging and Monitoring (LOG) ---
@@ -99,6 +174,14 @@ const controls = [
     title: "Logging and Monitoring Policy and Procedures",
     question: "¿Se han establecido, documentado, aprobado y comunicado políticas y procedimientos de logging y monitoreo, con revisión al menos anual o ante cambios significativos?",
     evidenceHint: "Política de logging aprobada, estándares de retención, procedimientos de revisión, registro de cambios.",
+    auditingGuidelines: [
+      "Verificar que los logs específicos del cliente, incluyendo uso de API y comportamiento de respuestas del modelo, son accesibles y auditables.",
+      "Verificar que los logs se revisan para validar decisiones del modelo cuando la IA se usa en toma de decisiones críticas.",
+      "Confirmar que los logs están integrados en el SOC o sistema SIEM de la organización.",
+      "Validar la capacidad de generar artefactos forenses de los logs en caso de disputas sobre outputs del modelo.",
+      "Verificar que las alertas basadas en políticas de logging están activamente monitoreadas y atendidas.",
+      "Confirmar que las políticas son comunicadas, revisadas al menos anualmente y aprobadas por stakeholders relevantes."
+    ],
     weight: 1
   },
   {
@@ -107,6 +190,14 @@ const controls = [
     title: "Input Monitoring",
     question: "¿Se registran y monitorean todos los eventos de entrada (contenido y metadata) para habilitar auditoría y reporting sobre el uso de modelos de IA?",
     evidenceHint: "Logs de prompts/inputs, metadata de sesión, correlación de eventos, sistema de auditoría de entradas.",
+    auditingGuidelines: [
+      "Verificar que los logs internos capturan prompts, documentos o inputs enviados a modelos de IA.",
+      "Verificar que la metadata incluye rol de usuario, sistema de origen y uso previsto.",
+      "Confirmar que existen procedimientos de revisión para validar si tipos de input no autorizados son bloqueados.",
+      "Verificar la segregación de logs entre unidades de negocio que usan el mismo sistema de IA.",
+      "Verificar que los logs se revisan como parte de validación post-deployment o red-teaming.",
+      "Confirmar almacenamiento seguro y políticas de eliminación para logs que contengan contenido sensible."
+    ],
     weight: 1.1
   },
   {
@@ -115,6 +206,14 @@ const controls = [
     title: "Output Monitoring",
     question: "¿Se registran y monitorean todos los eventos de salida (contenido y metadata) para habilitar auditoría y reporting sobre el uso de modelos de IA?",
     evidenceHint: "Logs de respuestas/outputs, alertas de contenido anómalo, dashboards de monitoreo, métricas de calidad.",
+    auditingGuidelines: [
+      "Verificar que los logs capturan outputs de IA retornados a través de interfaces o sistemas downstream integrados.",
+      "Verificar que los logs incluyen contexto de negocio (ID de caso de uso, departamento, grupo de usuario).",
+      "Verificar que el monitoreo rastrea inconsistencias o cambios en el comportamiento de los outputs.",
+      "Confirmar almacenamiento tamper-proof para logs vinculados a outputs regulatorios (ej. decisiones de crédito).",
+      "Verificar que outputs que disparan acciones (alertas, decisiones) son trazables a través de los logs.",
+      "Verificar que modificaciones no autorizadas a outputs son detectadas y flaggeadas."
+    ],
     weight: 1.1
   },
   // --- Model Security (MDS) ---
@@ -124,6 +223,14 @@ const controls = [
     title: "Training Pipeline Security",
     question: "¿Se han definido, implementado y evaluado políticas, procedimientos y medidas técnicas que aseguren la seguridad del pipeline de entrenamiento, con revisión periódica ante nuevas amenazas?",
     evidenceHint: "Seguridad de pipeline ML, controles de acceso a datos de training, validación de integridad, hardening de infraestructura.",
+    auditingGuidelines: [
+      "Revisar contratos/SLAs con proveedores para cláusulas de seguridad del pipeline de entrenamiento.",
+      "Evaluar la seguridad del proveedor revisando certificaciones, reportes de auditoría del AP, OSP y MP.",
+      "Verificar documentación de revisión periódica del proveedor por parte de la organización.",
+      "Validar las garantías de seguridad del proveedor requiriendo evidencia documentada (certificaciones, auditorías de terceros).",
+      "Revisar reportes de pruebas adversariales que cubran vectores de ataque relevantes con métodos reconocidos.",
+      "Exigir logs de cambios de modelo transparentes que registren actualizaciones, cambios de datos/arquitectura y riesgos asociados."
+    ],
     weight: 1.1
   },
   {
@@ -132,6 +239,14 @@ const controls = [
     title: "Adversarial Attack Analysis",
     question: "¿Se han definido, implementado y evaluado procesos y medidas técnicas para evaluar amenazas adversariales específicas para cada modelo de IA?",
     evidenceHint: "Red teaming de modelos, pruebas adversariales, análisis de robustez, documentación de vectores de ataque.",
+    auditingGuidelines: [
+      "Examinar procesos documentados para analizar amenazas adversariales específicas a las implementaciones de IA.",
+      "Verificar la identificación de vectores de ataque incluyendo manipulación de inputs, explotación de contexto y prompt engineering.",
+      "Evaluar el framework de priorización de amenazas según arquitectura de la aplicación y patrones de interacción de usuario.",
+      "Verificar la implementación de sistemas de monitoreo para detectar indicadores de ataque a nivel de aplicación.",
+      "Revisar procedimientos de prueba de defensas contra amenazas priorizadas.",
+      "Verificar procesos para actualizar evaluaciones de amenazas cuando cambian features o surgen nuevas técnicas de ataque."
+    ],
     weight: 1.1
   },
   {
@@ -140,6 +255,14 @@ const controls = [
     title: "Model Continuous Monitoring",
     question: "¿Se han definido e implementado procesos y medidas técnicas para el monitoreo continuo de métricas de rendimiento del modelo, detectando cambios inesperados o degradación?",
     evidenceHint: "Dashboards de model performance, alertas de drift, métricas de accuracy/latency, registros de retraining.",
+    auditingGuidelines: [
+      "Examinar el monitoreo específico implementado para rastrear rendimiento del modelo en el contexto de la aplicación.",
+      "Verificar que los patrones de interacción de usuario se capturan y correlacionan con el rendimiento del modelo.",
+      "Evaluar la implementación de métricas customizadas relevantes a preocupaciones de rendimiento específicas.",
+      "Revisar la integración del monitoreo con los procesos de respuesta a incidentes de la aplicación.",
+      "Confirmar que los insights de monitoreo se comparten con los clientes de IA que usan la aplicación.",
+      "Verificar procesos para escalar anomalías detectadas a proveedores upstream cuando sea necesario."
+    ],
     weight: 1
   },
   // --- Audit & Assurance (A&A) ---
@@ -149,6 +272,14 @@ const controls = [
     title: "Audit and Assurance Policy and Procedures",
     question: "¿Se han establecido, documentado, aprobado y comunicado políticas y procedimientos de auditoría y aseguramiento, con revisión al menos anual o ante cambios significativos?",
     evidenceHint: "Política de auditoría aprobada, plan anual de auditoría, estándares de referencia, actas de aprobación.",
+    auditingGuidelines: [
+      "Confirmar que los requisitos de auditoría para proveedores están declarados en políticas y contratos de adquisición.",
+      "Validar si la política de aseguramiento mapea claramente las responsabilidades del proveedor cloud (modelo de responsabilidad compartida).",
+      "Verificar si las políticas incluyen verificación regular de dónde residen los datos de IA en la nube y cumplimiento jurisdiccional.",
+      "Examinar procedimientos de auditoría de cómo los empleados interactúan con herramientas de IA en la nube.",
+      "Verificar que un proceso de revisión anual ha generado actualizaciones a las políticas de aseguramiento en los últimos 12 meses.",
+      "Confirmar que existen procesos para monitorear, rastrear y cerrar hallazgos de auditoría con acciones correctivas documentadas."
+    ],
     weight: 1
   },
   {
@@ -157,6 +288,13 @@ const controls = [
     title: "Independent Assessments",
     question: "¿Se realizan evaluaciones independientes de auditoría y aseguramiento según estándares relevantes al menos anualmente?",
     evidenceHint: "Reportes de auditoría independiente, certificaciones, informes de terceros, planes de remediación post-auditoría.",
+    auditingGuidelines: [
+      "Confirmar que la organización no depende únicamente de auditorías del proveedor y que realiza evaluaciones independientes de controles de IA.",
+      "Examinar políticas y procedimientos que definen cómo se programan y conducen las evaluaciones independientes.",
+      "Verificar que la organización mantiene y revisa periódicamente una lista de estándares y regulaciones aplicables.",
+      "Confirmar que las evaluaciones se conducen con independencia y supervisión de gobierno (ej. comité de Board).",
+      "Verificar que se realiza al menos una evaluación independiente anual con evidencia documentada que incluya servicios de terceros."
+    ],
     weight: 1
   }
 ];
@@ -211,11 +349,7 @@ function bindEvents() {
   });
 
   document.getElementById("exportBtn").addEventListener("click", exportResults);
-  document.getElementById("resetBtn").addEventListener("click", resetAssessment);
   document.getElementById("startFromHomeBtn").addEventListener("click", () => showPanel("setupPanel"));
-
-  bindChoiceGroup("providerChoices", "provider");
-  bindChoiceGroup("roleChoices", "role");
 }
 
 function bindChoiceGroup(containerId, field) {
@@ -245,20 +379,18 @@ function renderSetup() {
     const input = document.getElementById(key);
     if (input) input.value = value || "";
   });
-  selectChoice("providerChoices", state.setup.provider);
-  selectChoice("roleChoices", state.setup.role);
-}
-
-function selectChoice(containerId, value) {
-  document.querySelectorAll(`#${containerId} .choice`).forEach(button => {
-    button.classList.toggle("selected", button.dataset.value === value);
-  });
 }
 
 function saveSetupFromForm(options = {}) {
+  const form = document.getElementById("setupForm");
   const required = ["orgName", "sector", "country", "owner"];
   const missing = required.filter(id => !document.getElementById(id).value.trim());
   const error = document.getElementById("setupError");
+
+  if (!options.silent && !form.checkValidity()) {
+    form.reportValidity();
+    return false;
+  }
 
   if (missing.length && !options.silent) {
     error.textContent = "Completa organización, sector, país y responsable antes de iniciar.";
@@ -349,6 +481,11 @@ function renderControl(control) {
         </label>
       </div>
       <p class="hint">Evidencia esperada: ${control.evidenceHint}</p>
+      ${control.auditingGuidelines ? `
+      <details class="audit-guidelines">
+        <summary>Guía de Auditoría (AIC)</summary>
+        <ol>${control.auditingGuidelines.map(g => `<li>${escapeHtml(g)}</li>`).join("")}</ol>
+      </details>` : ""}
     </div>
   `;
 }
@@ -378,10 +515,7 @@ function setEvidence(controlId, field, value) {
 }
 
 function updateProgress() {
-  const answered = Object.keys(state.answers).length;
-  const total = controls.length;
-  document.getElementById("progressLabel").textContent = `${answered}/${total}`;
-  document.getElementById("progressBar").style.width = `${Math.round(answered / total * 100)}%`;
+  // Progress is now shown only in the results panel
 }
 
 function renderResults() {
@@ -391,6 +525,14 @@ function renderResults() {
 
   document.getElementById("resultsContainer").innerHTML = `
     <div class="results-grid">
+      <article class="result-card">
+        <p class="eyebrow">Progreso</p>
+        <div class="score">${summary.answered}<span class="score-total">/${controls.length}</span></div>
+        <span class="level">controles respondidos</span>
+        <div class="progress-track" style="margin-top:12px">
+          <div class="progress-bar" style="width:${Math.round(summary.answered / controls.length * 100)}%"></div>
+        </div>
+      </article>
       <article class="result-card">
         <p class="eyebrow">Score global</p>
         <div class="score" style="color:${scoreColor(summary.score)}">${summary.score}</div>

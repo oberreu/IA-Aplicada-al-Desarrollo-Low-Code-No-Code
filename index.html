@@ -7,19 +7,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="on-landing">
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark">CSA</div>
-      <div>
-        <h1>CSA LATAM AICM Evaluator 2.0</h1>
-        <p>Assessment funcional reducido para gobierno y seguridad de Inteligencia Artificial</p>
-      </div>
-    </div>
-    <div class="top-actions">
-      <button class="danger-button" id="resetBtn" type="button">Reiniciar</button>
-    </div>
-  </header>
-
   <main class="shell landing-active">
     <aside class="sidebar" aria-label="Navegación del assessment">
       <button class="nav-item active" data-panel="homePanel" type="button">
@@ -38,13 +25,6 @@
         <span>04</span>
         Resultados
       </button>
-      <div class="progress-card">
-        <strong id="progressLabel">0/19</strong>
-        <span>controles respondidos</span>
-        <div class="progress-track">
-          <div id="progressBar" class="progress-bar"></div>
-        </div>
-      </div>
     </aside>
 
     <section class="workspace">
@@ -78,6 +58,110 @@
               <span>Global, por dominio y roadmap 30/60/90</span>
             </div>
           </div>
+
+          <div class="landing-domains">
+            <h3>Dominios y objetivos de control</h3>
+            <p class="landing-domains-intro">
+              Esta evaluación cubre 6 de los 18 dominios del AICM v1.0.3, seleccionados por su relevancia
+              para organizaciones en fase de adopción de IA sobre entornos cloud.
+            </p>
+            <div class="domain-summary-grid">
+              <article class="domain-summary">
+                <strong>GRC</strong>
+                <span>Governance, Risk and Compliance</span>
+                <p>Establece políticas de gobierno de IA, programas de gestión de riesgos, evaluaciones de impacto y mecanismos de supervisión humana. Asegura que la adopción de IA esté alineada con la estrategia organizacional y los requisitos regulatorios.</p>
+              </article>
+              <article class="domain-summary">
+                <strong>AIS</strong>
+                <span>Application &amp; Interface Security</span>
+                <p>Protege las aplicaciones de IA mediante validación de entradas y salidas contra patrones adversariales, seguridad de APIs y separación de instrucciones de sistema, usuario y datos para prevenir prompt injection.</p>
+              </article>
+              <article class="domain-summary">
+                <strong>DSP</strong>
+                <span>Data Security &amp; Privacy Lifecycle</span>
+                <p>Gestiona la protección de datos sensibles a lo largo de su ciclo de vida, documenta la proveniencia y trazabilidad de los datos, e implementa controles para prevenir y detectar data poisoning en modelos de IA.</p>
+              </article>
+              <article class="domain-summary">
+                <strong>LOG</strong>
+                <span>Logging and Monitoring</span>
+                <p>Define políticas de logging y monitoreo, registra y supervisa todas las entradas y salidas del modelo (contenido y metadata) para habilitar auditoría, detección de anomalías y reporting sobre el uso de sistemas de IA.</p>
+              </article>
+              <article class="domain-summary">
+                <strong>MDS</strong>
+                <span>Model Security</span>
+                <p>Asegura la integridad del pipeline de entrenamiento, evalúa amenazas adversariales específicas para cada modelo e implementa monitoreo continuo de métricas de rendimiento para detectar degradación o cambios inesperados.</p>
+              </article>
+              <article class="domain-summary">
+                <strong>A&amp;A</strong>
+                <span>Audit &amp; Assurance</span>
+                <p>Establece políticas de auditoría y aseguramiento, y garantiza la realización de evaluaciones independientes según estándares relevantes para verificar el cumplimiento de controles de seguridad de IA.</p>
+              </article>
+            </div>
+
+            <h4 class="domains-excluded-title">Dominios del AICM no cubiertos en este prototipo</h4>
+            <div class="domain-summary-grid excluded">
+              <article class="domain-summary excluded">
+                <strong>BCR</strong>
+                <span>Business Continuity &amp; Operational Resilience</span>
+                <p>Continuidad operativa y resiliencia de servicios de IA ante interrupciones, desastres o fallas críticas.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>CCC</strong>
+                <span>Change Control &amp; Configuration Management</span>
+                <p>Gestión de cambios y configuraciones en sistemas de IA para evitar alteraciones no autorizadas.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>CEK</strong>
+                <span>Cryptography, Encryption &amp; Key Management</span>
+                <p>Cifrado de datos, gestión de claves y controles criptográficos para proteger información en tránsito y reposo.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>DCS</strong>
+                <span>Datacenter Security</span>
+                <p>Seguridad física y lógica de los centros de datos que soportan la infraestructura de IA.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>HRS</strong>
+                <span>Human Resources</span>
+                <p>Capacitación, concientización y controles de personal que interactúa con sistemas de IA.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>IAM</strong>
+                <span>Identity &amp; Access Management</span>
+                <p>Gestión de identidades, autenticación, autorización y control de acceso a servicios y modelos de IA.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>IPY</strong>
+                <span>Interoperability &amp; Portability</span>
+                <p>Portabilidad de datos y modelos entre proveedores y plataformas, evitando dependencia de un solo vendor.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>SEF</strong>
+                <span>Security Incident Management &amp; Forensics</span>
+                <p>Respuesta a incidentes de seguridad, investigación forense y gestión de evidencia digital en contextos de IA.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>STA</strong>
+                <span>Supply Chain, Transparency &amp; Accountability</span>
+                <p>Evaluación de proveedores, transparencia en la cadena de suministro de IA y rendición de cuentas.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>TVM</strong>
+                <span>Threat &amp; Vulnerability Management</span>
+                <p>Identificación, evaluación y remediación de amenazas y vulnerabilidades en sistemas de IA.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>UEM</strong>
+                <span>Universal Endpoint Management</span>
+                <p>Gestión y protección de endpoints que acceden o ejecutan servicios de IA.</p>
+              </article>
+              <article class="domain-summary excluded">
+                <strong>KAC</strong>
+                <span>Knowledge Access Control</span>
+                <p>Control de acceso al conocimiento y datos de entrenamiento según principio de necesidad de saber.</p>
+              </article>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -95,7 +179,7 @@
           <div class="form-grid">
             <label>
               Organización
-              <input id="orgName" name="orgName" type="text" placeholder="Ej. Banco Andina S.A." required>
+              <input id="orgName" name="orgName" type="text" placeholder="Ej. Banco Andina S.A." required minlength="3" maxlength="100" pattern="[A-Za-zÀ-ÿ0-9\s.,&\-]+" title="Solo letras, números, espacios y puntuación básica">
             </label>
             <label>
               Sector
@@ -111,36 +195,12 @@
             </label>
             <label>
               País
-              <input id="country" name="country" type="text" placeholder="Ej. Chile" required>
+              <input id="country" name="country" type="text" placeholder="Ej. Chile" required minlength="2" maxlength="60" pattern="[A-Za-zÀ-ÿ\s\-]+" title="Solo letras y espacios">
             </label>
             <label>
               Responsable
-              <input id="owner" name="owner" type="text" placeholder="Ej. Andrea, GRC Lead" required>
+              <input id="owner" name="owner" type="text" placeholder="Ej. Andrea Silva, GRC Lead" required minlength="3" maxlength="100" pattern="[A-Za-zÀ-ÿ0-9\s.,\-]+" title="Solo letras, números, espacios y puntuación básica">
             </label>
-          </div>
-
-          <div class="choice-group">
-            <div>
-              <h3>Proveedor cloud principal</h3>
-              <p>Se usa para contextualizar evidencia y recomendaciones.</p>
-            </div>
-            <div class="choice-row" id="providerChoices">
-              <button class="choice selected" data-value="Azure" type="button">Azure</button>
-              <button class="choice" data-value="AWS" type="button">AWS</button>
-              <button class="choice" data-value="Google Cloud" type="button">Google Cloud</button>
-            </div>
-          </div>
-
-          <div class="choice-group">
-            <div>
-              <h3>Rol evaluado</h3>
-              <p>Perfil AICM simplificado para el assessment.</p>
-            </div>
-            <div class="choice-row" id="roleChoices">
-              <button class="choice selected" data-value="AI Client" type="button">Cliente IA</button>
-              <button class="choice" data-value="Application Provider" type="button">Proveedor app</button>
-              <button class="choice" data-value="Cloud Service Provider" type="button">Proveedor cloud</button>
-            </div>
           </div>
 
           <p class="form-error" id="setupError" role="alert"></p>
