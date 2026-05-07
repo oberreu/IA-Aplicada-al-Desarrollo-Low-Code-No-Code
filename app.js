@@ -668,11 +668,6 @@ function renderResults() {
           </div>
         </div>
       </div>
-      <div class="cs-section cs-status cs-status-${summary.certStatus === 'Compliant' ? 'ok' : summary.certStatus === 'Partially Compliant' ? 'partial' : 'nc'}">
-        <h4>Certification Status</h4>
-        <span class="cs-status-label">${summary.certStatus}</span>
-        <p>Para certificar, la organización debe ser compliant con el 100% de los controles aplicables.</p>
-      </div>
     </div>
 
     <div class="results-grid">
