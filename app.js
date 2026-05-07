@@ -30,34 +30,6 @@ const controls = [
     ],
     weight: 1.2
   },
-  {
-    id: "GRC-10",
-    domain: "Governance, Risk and Compliance",
-    title: "AI Impact Assessment",
-    question: "¿Se ha establecido y comunicado un proceso de AI Impact Assessment con criterios para evaluar regularmente los impactos éticos, sociales, operativos, legales y de seguridad del sistema de IA a lo largo de su ciclo de vida?",
-    evidenceHint: "Proceso de AI Impact Assessment documentado, criterios de evaluación, reportes de impacto, registros de stakeholders notificados.",
-    auditingGuidelines: [
-      "Verificar que existe un proceso de AI Impact Assessment documentado y alineado con la tolerancia al riesgo organizacional.",
-      "Verificar los criterios de evaluación y mecanismo de scoring para dimensiones de riesgo: ético, social, legal, operativo y de seguridad.",
-      "Evaluar cómo la metodología de impacto evalúa efectos diferenciales en distintas aplicaciones downstream.",
-      "Verificar el proceso para identificar stakeholders y cómo se comunican los resultados e incorpora su feedback."
-    ],
-    weight: 1.2
-  },
-  {
-    id: "GRC-15",
-    domain: "Governance, Risk and Compliance",
-    title: "Human Supervision",
-    question: "¿Existen procesos, procedimientos y medidas técnicas para asegurar la supervisión y control humano del sistema de IA en cumplimiento con requisitos regulatorios y gestión de riesgos organizacional?",
-    evidenceHint: "Procedimiento de human-in-the-loop, escalamiento, umbrales de intervención, evidencia de override humano.",
-    auditingGuidelines: [
-      "Verificar que existen procesos documentados para que operadores humanos supervisen el funcionamiento y rendimiento del sistema de IA.",
-      "Examinar el cumplimiento de los procesos con requisitos regulatorios y mejores prácticas de la industria.",
-      "Confirmar que adoptan un enfoque basado en riesgo y están implementados concretamente por los responsables.",
-      "Inspeccionar si se monitorean con métricas de eficacia y se revisan periódicamente."
-    ],
-    weight: 1.1
-  },
   // --- Application & Interface Security (AIS) ---
   {
     id: "AIS-08",
@@ -73,34 +45,6 @@ const controls = [
       "Verificar que se monitorea la efectividad de la validación con métricas relevantes actualizadas regularmente."
     ],
     weight: 1.1
-  },
-  {
-    id: "AIS-09",
-    domain: "Application & Interface Security",
-    title: "Output Validation",
-    question: "¿Se validan, filtran, modifican o bloquean las salidas del modelo contra patrones adversariales, patrones de fallo y comportamiento no deseado según las políticas organizacionales?",
-    evidenceHint: "Filtros de output, content safety, pruebas de salidas tóxicas/sensibles, mecanismos de redacción automática.",
-    auditingGuidelines: [
-      "Confirmar que existen políticas y controles para validar outputs contra comportamientos inseguros o adversariales.",
-      "Verificar que los mecanismos de validación de salida cubren insecure output handling y excessive agency.",
-      "Verificar que se realizan ejercicios de AI Red Teaming que evalúan la efectividad de la validación de outputs.",
-      "Confirmar que se monitorea activamente la efectividad con métricas diseñadas para detectar riesgos de outputs adversariales.",
-      "Verificar que los controles se revisan y actualizan ante nuevas amenazas y hallazgos de Red Teaming."
-    ],
-    weight: 1.1
-  },
-  {
-    id: "AIS-10",
-    domain: "Application & Interface Security",
-    title: "API Security",
-    question: "¿Se han definido e implementado procesos, procedimientos y medidas técnicas para asegurar las APIs, con revisión al menos anual o ante cambios significativos?",
-    evidenceHint: "API gateway configurado, autenticación/autorización, rotación de claves, rate limiting, logs de acceso a APIs.",
-    auditingGuidelines: [
-      "Verificar que existen medidas y procesos para asegurar APIs con mecanismos de gestión de claves y autorización.",
-      "Verificar la evaluación de riesgos de la cadena de suministro de APIs (análisis de composición, reportes de vulnerabilidades).",
-      "Confirmar que los procesos y medidas se revisan al menos anualmente y después de cambios significativos."
-    ],
-    weight: 1
   },
   {
     id: "AIS-15",
@@ -136,22 +80,6 @@ const controls = [
     weight: 1.2
   },
   {
-    id: "DSP-20",
-    domain: "Data Security & Privacy Lifecycle",
-    title: "Data Provenance and Transparency",
-    question: "¿Se documentan y trazan las fuentes de datos utilizadas por el modelo, y se hace disponible la información de procedencia según requisitos legales y regulatorios?",
-    evidenceHint: "Registro de fuentes de datos, data lineage, documentación de datasets de entrenamiento, disclosure de proveniencia.",
-    auditingGuidelines: [
-      "Verificar que todas las fuentes de datos usadas en despliegues de IA están identificadas y documentadas.",
-      "Verificar que los registros de lineage muestran cómo los datos se mueven a través del ciclo de vida de IA.",
-      "Verificar que se mantienen registros de proveniencia para cualquier transformación o generación de datos sintéticos.",
-      "Verificar que el acceso y modificación de datos de IA son rastreados por sistemas de monitoreo automatizado.",
-      "Verificar que se aplica versionamiento a datasets, configuraciones de modelo y logs de inferencia.",
-      "Verificar que existe un proceso auditable para disclosure de datos a reguladores cuando sea requerido."
-    ],
-    weight: 1
-  },
-  {
     id: "DSP-21",
     domain: "Data Security & Privacy Lifecycle",
     title: "Data Poisoning Prevention & Detection",
@@ -183,38 +111,6 @@ const controls = [
       "Confirmar que las políticas son comunicadas, revisadas al menos anualmente y aprobadas por stakeholders relevantes."
     ],
     weight: 1
-  },
-  {
-    id: "LOG-14",
-    domain: "Logging and Monitoring",
-    title: "Input Monitoring",
-    question: "¿Se registran y monitorean todos los eventos de entrada (contenido y metadata) para habilitar auditoría y reporting sobre el uso de modelos de IA?",
-    evidenceHint: "Logs de prompts/inputs, metadata de sesión, correlación de eventos, sistema de auditoría de entradas.",
-    auditingGuidelines: [
-      "Verificar que los logs internos capturan prompts, documentos o inputs enviados a modelos de IA.",
-      "Verificar que la metadata incluye rol de usuario, sistema de origen y uso previsto.",
-      "Confirmar que existen procedimientos de revisión para validar si tipos de input no autorizados son bloqueados.",
-      "Verificar la segregación de logs entre unidades de negocio que usan el mismo sistema de IA.",
-      "Verificar que los logs se revisan como parte de validación post-deployment o red-teaming.",
-      "Confirmar almacenamiento seguro y políticas de eliminación para logs que contengan contenido sensible."
-    ],
-    weight: 1.1
-  },
-  {
-    id: "LOG-15",
-    domain: "Logging and Monitoring",
-    title: "Output Monitoring",
-    question: "¿Se registran y monitorean todos los eventos de salida (contenido y metadata) para habilitar auditoría y reporting sobre el uso de modelos de IA?",
-    evidenceHint: "Logs de respuestas/outputs, alertas de contenido anómalo, dashboards de monitoreo, métricas de calidad.",
-    auditingGuidelines: [
-      "Verificar que los logs capturan outputs de IA retornados a través de interfaces o sistemas downstream integrados.",
-      "Verificar que los logs incluyen contexto de negocio (ID de caso de uso, departamento, grupo de usuario).",
-      "Verificar que el monitoreo rastrea inconsistencias o cambios en el comportamiento de los outputs.",
-      "Confirmar almacenamiento tamper-proof para logs vinculados a outputs regulatorios (ej. decisiones de crédito).",
-      "Verificar que outputs que disparan acciones (alertas, decisiones) son trazables a través de los logs.",
-      "Verificar que modificaciones no autorizadas a outputs son detectadas y flaggeadas."
-    ],
-    weight: 1.1
   },
   // --- Model Security (MDS) ---
   {
@@ -249,22 +145,6 @@ const controls = [
     ],
     weight: 1.1
   },
-  {
-    id: "MDS-10",
-    domain: "Model Security",
-    title: "Model Continuous Monitoring",
-    question: "¿Se han definido e implementado procesos y medidas técnicas para el monitoreo continuo de métricas de rendimiento del modelo, detectando cambios inesperados o degradación?",
-    evidenceHint: "Dashboards de model performance, alertas de drift, métricas de accuracy/latency, registros de retraining.",
-    auditingGuidelines: [
-      "Examinar el monitoreo específico implementado para rastrear rendimiento del modelo en el contexto de la aplicación.",
-      "Verificar que los patrones de interacción de usuario se capturan y correlacionan con el rendimiento del modelo.",
-      "Evaluar la implementación de métricas customizadas relevantes a preocupaciones de rendimiento específicas.",
-      "Revisar la integración del monitoreo con los procesos de respuesta a incidentes de la aplicación.",
-      "Confirmar que los insights de monitoreo se comparten con los clientes de IA que usan la aplicación.",
-      "Verificar procesos para escalar anomalías detectadas a proveedores upstream cuando sea necesario."
-    ],
-    weight: 1
-  },
   // --- Audit & Assurance (A&A) ---
   {
     id: "A&A-01",
@@ -279,21 +159,6 @@ const controls = [
       "Examinar procedimientos de auditoría de cómo los empleados interactúan con herramientas de IA en la nube.",
       "Verificar que un proceso de revisión anual ha generado actualizaciones a las políticas de aseguramiento en los últimos 12 meses.",
       "Confirmar que existen procesos para monitorear, rastrear y cerrar hallazgos de auditoría con acciones correctivas documentadas."
-    ],
-    weight: 1
-  },
-  {
-    id: "A&A-02",
-    domain: "Audit & Assurance",
-    title: "Independent Assessments",
-    question: "¿Se realizan evaluaciones independientes de auditoría y aseguramiento según estándares relevantes al menos anualmente?",
-    evidenceHint: "Reportes de auditoría independiente, certificaciones, informes de terceros, planes de remediación post-auditoría.",
-    auditingGuidelines: [
-      "Confirmar que la organización no depende únicamente de auditorías del proveedor y que realiza evaluaciones independientes de controles de IA.",
-      "Examinar políticas y procedimientos que definen cómo se programan y conducen las evaluaciones independientes.",
-      "Verificar que la organización mantiene y revisa periódicamente una lista de estándares y regulaciones aplicables.",
-      "Confirmar que las evaluaciones se conducen con independencia y supervisión de gobierno (ej. comité de Board).",
-      "Verificar que se realiza al menos una evaluación independiente anual con evidencia documentada que incluya servicios de terceros."
     ],
     weight: 1
   }
