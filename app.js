@@ -743,6 +743,18 @@ function handleFileUpload(controlId, input) {
     reader.onload = () => {
       const analysis = analyzeEvidence(controlId, reader.result);
       state.evidence[controlId].aiAnalysis = analysis;
+      // Auto-set evidence status based on AI verdict
+      if (analysis && state.evidence[controlId].type) {
+        const answer = state.answers[controlId] || "";
+        const allowed = allowedStatus(state.evidence[controlId].type, answer);
+        let suggestedStatus = "";
+        if (analysis.score >= 75) suggestedStatus = "Suficiente";
+        else if (analysis.score >= 40) suggestedStatus = "Parcial";
+        else suggestedStatus = "Pendiente";
+        if (allowed.includes(suggestedStatus)) {
+          state.evidence[controlId].status = suggestedStatus;
+        }
+      }
       persist();
       renderControls();
     };
