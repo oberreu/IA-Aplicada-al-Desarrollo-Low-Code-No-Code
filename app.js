@@ -34,12 +34,13 @@ let currentUser = null;
 
 const STORAGE_KEY = "csaLatamAicmModulo4State";
 
-const controls = [
+const aicmControlCatalog = [
   // --- Governance, Risk and Compliance (GRC) ---
   {
     id: "GRC-01",
     domain: "Governance, Risk and Compliance",
     title: "Governance Program Policy and Procedures",
+    frameworkMapping: { "ISO 42001": "5.1, 5.2", "NIST AI RMF": "GOVERN 1.1", "EU AI Act": "Art. 9", "OWASP LLM Top 10": "—" },
     question: "¿La organización ha establecido, documentado, aprobado y comunicado políticas y procedimientos para un programa de gobierno de la información que incluya sistemas de IA, con revisión al menos anual?",
     evidenceHint: "Política de gobierno de IA aprobada, acta de aprobación, matriz RACI, estándar interno publicado, registro de revisiones.",
     auditingGuidelines: [
@@ -61,6 +62,7 @@ const controls = [
     id: "GRC-02",
     domain: "Governance, Risk and Compliance",
     title: "Risk Management Program",
+    frameworkMapping: { "ISO 42001": "6.1", "NIST AI RMF": "GOVERN 2.1", "EU AI Act": "Art. 9", "OWASP LLM Top 10": "—" },
     question: "¿Existe un programa formal y documentado de gestión de riesgos de IA (AIRM) patrocinado por la dirección, que incluya identificación, evaluación, tratamiento y aceptación de riesgos?",
     evidenceHint: "Programa AIRM documentado, registro de riesgos, criterios de aceptación, aprobaciones de riesgo, owner por riesgo.",
     auditingGuidelines: [
@@ -83,6 +85,7 @@ const controls = [
     id: "AIS-08",
     domain: "Application & Interface Security",
     title: "Input Validation",
+    frameworkMapping: { "ISO 42001": "A.8.4", "NIST AI RMF": "MAP 2.3", "EU AI Act": "Art. 15", "OWASP LLM Top 10": "LLM01" },
     question: "¿Se validan, filtran, modifican o bloquean las entradas contra patrones adversariales, patrones de fallo y comportamiento no deseado según las políticas organizacionales y regulaciones aplicables?",
     evidenceHint: "Reglas de validación, filtros de prompt injection, guardrails, pruebas de seguridad de inputs, casos negativos documentados.",
     auditingGuidelines: [
@@ -105,6 +108,7 @@ const controls = [
     id: "AIS-15",
     domain: "Application & Interface Security",
     title: "Prompt Differentiation",
+    frameworkMapping: { "ISO 42001": "A.8.4", "NIST AI RMF": "MAP 2.3", "EU AI Act": "Art. 15", "OWASP LLM Top 10": "LLM01" },
     question: "¿Se implementan mecanismos que permitan al modelo distinguir claramente entre instrucciones del usuario, datos e instrucciones de sistema (system prompts)?",
     evidenceHint: "Arquitectura de prompts documentada, separación system/user/data, pruebas de indirect prompt injection, controles de contexto.",
     auditingGuidelines: [
@@ -129,6 +133,7 @@ const controls = [
     id: "DSP-17",
     domain: "Data Security & Privacy Lifecycle",
     title: "Sensitive Data Protection",
+    frameworkMapping: { "ISO 42001": "A.8.5", "NIST AI RMF": "GOVERN 6.1", "EU AI Act": "Art. 10", "OWASP LLM Top 10": "LLM06" },
     question: "¿Se han definido e implementado procesos, procedimientos y medidas técnicas para proteger datos sensibles a lo largo de su ciclo de vida en el contexto del sistema de IA?",
     evidenceHint: "Política DLP, clasificación de datos, anonimización, controles de privacidad, PII detection, revisión legal.",
     auditingGuidelines: [
@@ -152,6 +157,7 @@ const controls = [
     id: "DSP-21",
     domain: "Data Security & Privacy Lifecycle",
     title: "Data Poisoning Prevention & Detection",
+    frameworkMapping: { "ISO 42001": "A.8.4", "NIST AI RMF": "MEASURE 2.6", "EU AI Act": "Art. 15", "OWASP LLM Top 10": "LLM03" },
     question: "¿Se han definido, implementado y evaluado procesos y medidas técnicas para prevenir data poisoning en modelos de IA y detectarlo de forma continua?",
     evidenceHint: "Controles de integridad de datos de entrenamiento, monitoreo de anomalías en datasets, validación de fuentes, alertas de drift.",
     auditingGuidelines: [
@@ -176,6 +182,7 @@ const controls = [
     id: "LOG-01",
     domain: "Logging and Monitoring",
     title: "Logging and Monitoring Policy and Procedures",
+    frameworkMapping: { "ISO 42001": "A.6.2.6", "NIST AI RMF": "MEASURE 4.1", "EU AI Act": "Art. 12", "OWASP LLM Top 10": "LLM09" },
     question: "¿Se han establecido, documentado, aprobado y comunicado políticas y procedimientos de logging y monitoreo, con revisión al menos anual o ante cambios significativos?",
     evidenceHint: "Política de logging aprobada, estándares de retención, procedimientos de revisión, registro de cambios.",
     auditingGuidelines: [
@@ -200,6 +207,7 @@ const controls = [
     id: "MDS-01",
     domain: "Model Security",
     title: "Training Pipeline Security",
+    frameworkMapping: { "ISO 42001": "A.8.4", "NIST AI RMF": "MAP 3.4", "EU AI Act": "Art. 10", "OWASP LLM Top 10": "LLM03" },
     question: "¿Se han definido, implementado y evaluado políticas, procedimientos y medidas técnicas que aseguren la seguridad del pipeline de entrenamiento, con revisión periódica ante nuevas amenazas?",
     evidenceHint: "Seguridad de pipeline ML, controles de acceso a datos de training, validación de integridad, hardening de infraestructura.",
     auditingGuidelines: [
@@ -223,6 +231,7 @@ const controls = [
     id: "MDS-06",
     domain: "Model Security",
     title: "Adversarial Attack Analysis",
+    frameworkMapping: { "ISO 42001": "A.8.4", "NIST AI RMF": "MEASURE 2.7", "EU AI Act": "Art. 15", "OWASP LLM Top 10": "LLM05" },
     question: "¿Se han definido, implementado y evaluado procesos y medidas técnicas para evaluar amenazas adversariales específicas para cada modelo de IA?",
     evidenceHint: "Red teaming de modelos, pruebas adversariales, análisis de robustez, documentación de vectores de ataque.",
     auditingGuidelines: [
@@ -247,6 +256,7 @@ const controls = [
     id: "A&A-01",
     domain: "Audit & Assurance",
     title: "Audit and Assurance Policy and Procedures",
+    frameworkMapping: { "ISO 42001": "9.2", "NIST AI RMF": "GOVERN 5.1", "EU AI Act": "Art. 61", "OWASP LLM Top 10": "—" },
     question: "¿Se han establecido, documentado, aprobado y comunicado políticas y procedimientos de auditoría y aseguramiento, con revisión al menos anual o ante cambios significativos?",
     evidenceHint: "Política de auditoría aprobada, plan anual de auditoría, estándares de referencia, actas de aprobación.",
     auditingGuidelines: [
@@ -268,6 +278,9 @@ const controls = [
   }
 ];
 
+const prototypeControlIds = ["GRC-01", "AIS-08", "DSP-17", "LOG-01", "MDS-01", "A&A-01"];
+const controls = aicmControlCatalog.filter(control => prototypeControlIds.includes(control.id));
+
 const answerScores = {
   YES: 1,
   PARTIAL: 0.5,
@@ -279,12 +292,13 @@ const maturityLevels = [
   { value: "", label: "Sin evaluar", description: "" },
   { value: "L0", label: "L0 – Inexistente", description: "No hay proceso ni práctica definida para este control." },
   { value: "L1", label: "L1 – Ad Hoc", description: "Prácticas informales, reactivas, dependientes de individuos. Sin documentación." },
-  { value: "L2", label: "L2 – Definido", description: "Procesos documentados y formalizados. Existe evidencia. Umbral de negligencia superado." },
-  { value: "L3", label: "L3 – Gestionado", description: "Procesos medidos, monitoreados con métricas y mejorados continuamente." },
-  { value: "L4", label: "L4 – Optimizado", description: "Prácticas proactivas, predictivas y adaptativas. Mejora continua automatizada." }
+  { value: "L2", label: "L2 – Planificado", description: "Procesos documentados y formalizados. Existe evidencia. Umbral de negligencia superado." },
+  { value: "L3", label: "L3 – Bien Definido", description: "Procesos estandarizados a nivel organizacional. Seguridad como práctica central." },
+  { value: "L4", label: "L4 – Controlado Cuantitativamente", description: "Gobernanza basada en métricas. Supervisión cuantitativa del desempeño del control." },
+  { value: "L5", label: "L5 – Mejora Continua", description: "Prácticas predictivas con analítica avanzada. Mejora continua automatizada con IA/ML." }
 ];
 
-const maturityScores = { L0: 0, L1: 0.25, L2: 0.5, L3: 0.75, L4: 1 };
+const maturityScores = { L0: 0, L1: 0.2, L2: 0.4, L3: 0.6, L4: 0.8, L5: 1 };
 
 let state = {
   setup: {
@@ -501,7 +515,7 @@ function bindEvents() {
     showPanel("assessmentPanel");
   });
 
-  document.getElementById("viewResultsBtn").addEventListener("click", () => {
+  document.querySelectorAll(".analysis-trigger").forEach(button => button.addEventListener("click", () => {
     if (!allControlsAnswered()) return;
     const missing = controlsMissingEvidence();
     if (missing.length) {
@@ -511,7 +525,7 @@ function bindEvents() {
     saveSetupFromForm({ silent: true });
     renderResults();
     showPanel("resultsPanel");
-  });
+  }));
 
   document.getElementById("exportBtn").addEventListener("click", exportResults);
   document.getElementById("exportPdfBtn").addEventListener("click", exportPdf);
@@ -626,6 +640,7 @@ function renderControl(control) {
         <div class="control-id">${control.id}</div>
         <div class="control-title">${control.title}</div>
       </div>
+      ${control.frameworkMapping ? `<div class="framework-mapping">${Object.entries(control.frameworkMapping).filter(([,v]) => v !== "—").map(([fw, ref]) => `<span class="fw-badge" title="${fw}">${fw}: ${ref}</span>`).join("")}</div>` : ""}
       <p class="control-question">${control.question}</p>
       <div class="control-fields">
         <label>
@@ -690,7 +705,7 @@ function answerClass(value) {
 }
 
 function maturityClass(value) {
-  const map = { L0: "mat-l0", L1: "mat-l1", L2: "mat-l2", L3: "mat-l3", L4: "mat-l4" };
+  const map = { L0: "mat-l0", L1: "mat-l1", L2: "mat-l2", L3: "mat-l3", L4: "mat-l4", L5: "mat-l5" };
   return map[value] || "";
 }
 
@@ -698,10 +713,10 @@ function maturityClass(value) {
 function allowedMaturity(answer) {
   switch (answer) {
     case "NO":      return ["", "L0", "L1"];
-    case "PARTIAL": return ["", "L1", "L2"];
-    case "YES":     return ["", "L2", "L3", "L4"];
+    case "PARTIAL": return ["", "L1", "L2", "L3"];
+    case "YES":     return ["", "L3", "L4", "L5"];
     case "NA":      return [""];
-    default:        return ["", "L0", "L1", "L2", "L3", "L4"];
+    default:        return ["", "L0", "L1", "L2", "L3", "L4", "L5"];
   }
 }
 
@@ -1024,8 +1039,10 @@ function controlsMissingEvidence() {
 function updateResultsAccess() {
   const ready = allControlsAnswered();
   const viewBtn = document.getElementById("viewResultsBtn");
+  const viewBottomBtn = document.getElementById("viewResultsBottomBtn");
   const navBtn = document.querySelector('.nav-item[data-panel="resultsPanel"]');
   if (viewBtn) viewBtn.disabled = !ready;
+  if (viewBottomBtn) viewBottomBtn.disabled = !ready;
   if (navBtn) navBtn.disabled = !ready;
 }
 
@@ -1098,7 +1115,7 @@ function renderResults() {
           </div>
           <div class="cs-cell">
             <span class="cs-label">Avg. Maturity Score</span>
-            <span class="cs-value cs-val-big">${summary.avgMaturityScore}/4.0</span>
+            <span class="cs-value cs-val-big">${summary.avgMaturityScore}/5.0</span>
           </div>
           <div class="cs-cell">
             <span class="cs-label">Controles evaluados</span>
@@ -1118,11 +1135,11 @@ function renderResults() {
         </div>
       </article>
       <article class="result-card">
-        <p class="eyebrow">Maturity Level (SCF C|P-CMM)</p>
-        <div class="score" style="color:${scoreColor(summary.avgMaturityScore / 4 * 100)}">${summary.maturityLevelValue}</div>
-        <span class="level">${summary.maturityLevelLabel} · ${summary.avgMaturityScore}/4.0</span>
+        <p class="eyebrow">Maturity Level (SCF SCR-CMM)</p>
+        <div class="score" style="color:${scoreColor(summary.avgMaturityScore / 5 * 100)}">${summary.maturityLevelValue}</div>
+        <span class="level">${summary.maturityLevelLabel} · ${summary.avgMaturityScore}/5.0</span>
         <div class="progress-track" style="margin-top:12px">
-          <div class="progress-bar" style="width:${summary.avgMaturityScore / 4 * 100}%"></div>
+          <div class="progress-bar" style="width:${summary.avgMaturityScore / 5 * 100}%"></div>
         </div>
       </article>
       <article class="result-card">
@@ -1137,22 +1154,22 @@ function renderResults() {
       </article>
     </div>
 
-    <h3 class="section-title">Madurez por dominio (SCF C|P-CMM · L0–L4)</h3>
+    <h3 class="section-title">Madurez por dominio (SCF SCR-CMM · L0–L5)</h3>
     <div class="maturity-domains">
       ${summary.domainMaturity.map(dm => `
         <div class="mat-domain-row">
           <strong>${shortDomain(dm.domain)}</strong>
           <div class="mat-bar-track">
-            <div class="mat-bar-fill" style="width:${(dm.avg / 4) * 100}%;background:${matBarColor(dm.avg)}"></div>
+            <div class="mat-bar-fill" style="width:${(dm.avg / 5) * 100}%;background:${matBarColor(dm.avg)}"></div>
           </div>
-          <span class="mat-val">${dm.avg}/4.0</span>
+          <span class="mat-val">${dm.avg}/5.0</span>
           <span class="mat-count">(${dm.assessed}/${dm.total})</span>
         </div>
       `).join("")}
       <p class="mat-legend">
         <span class="mat-leg-item"><span class="mat-dot" style="background:#ef4444"></span>L0–L1 Inexistente/Ad Hoc</span>
-        <span class="mat-leg-item"><span class="mat-dot" style="background:#f59e0b"></span>L2 Definido</span>
-        <span class="mat-leg-item"><span class="mat-dot" style="background:#22c55e"></span>L3–L4 Gestionado/Optimizado</span>
+        <span class="mat-leg-item"><span class="mat-dot" style="background:#f59e0b"></span>L2–L3 Planificado/Bien Definido</span>
+        <span class="mat-leg-item"><span class="mat-dot" style="background:#22c55e"></span>L4–L5 Controlado/Mejora Continua</span>
       </p>
     </div>
 
@@ -1217,7 +1234,7 @@ function renderRadarChart(summary) {
       scales: {
         r: {
           beginAtZero: true,
-          max: 4,
+          max: 5,
           ticks: { stepSize: 1, color: "#94a3b8", backdropColor: "transparent" },
           grid: { color: "rgba(45, 55, 72, 0.6)" },
           angleLines: { color: "rgba(45, 55, 72, 0.6)" },
@@ -1272,16 +1289,17 @@ function buildSummary() {
   const applicableControls = controls.length - naCount;
   const complianceLevel = applicableControls > 0 ? Math.round((yesCount / applicableControls) * 100) : 0;
 
-  // Maturity model (SCF C|P-CMM adapted L0–L4)
+  // Maturity model (SCF SCR-CMM L0–L5)
   const maturityAssessed = controls.filter(c => state.maturity[c.id] && state.maturity[c.id] !== "");
   const avgMaturityScore = maturityAssessed.length > 0
     ? maturityAssessed.reduce((sum, c) => sum + (maturityScores[state.maturity[c.id]] || 0), 0) / maturityAssessed.length
     : 0;
   let maturityLevelValue = "L0";
-  if (avgMaturityScore >= 0.875) maturityLevelValue = "L4";
-  else if (avgMaturityScore >= 0.625) maturityLevelValue = "L3";
-  else if (avgMaturityScore >= 0.375) maturityLevelValue = "L2";
-  else if (avgMaturityScore >= 0.125) maturityLevelValue = "L1";
+  if (avgMaturityScore >= 0.9) maturityLevelValue = "L5";
+  else if (avgMaturityScore >= 0.7) maturityLevelValue = "L4";
+  else if (avgMaturityScore >= 0.5) maturityLevelValue = "L3";
+  else if (avgMaturityScore >= 0.3) maturityLevelValue = "L2";
+  else if (avgMaturityScore >= 0.1) maturityLevelValue = "L1";
 
   const domainMaturity = domains.map(domain => {
     const domControls = controls.filter(c => c.domain === domain);
@@ -1289,11 +1307,11 @@ function buildSummary() {
     const avg = assessed.length > 0
       ? assessed.reduce((sum, c) => sum + (maturityScores[state.maturity[c.id]] || 0), 0) / assessed.length
       : 0;
-    return { domain, avg: Math.round(avg * 4 * 10) / 10, assessed: assessed.length, total: domControls.length };
+    return { domain, avg: Math.round(avg * 5 * 10) / 10, assessed: assessed.length, total: domControls.length };
   });
 
   // SCF Maturity level label
-  const maturityLabels = { L0: "Inexistente", L1: "Ad Hoc", L2: "Definido", L3: "Gestionado", L4: "Optimizado" };
+  const maturityLabels = { L0: "Inexistente", L1: "Ad Hoc", L2: "Planificado", L3: "Bien Definido", L4: "Controlado", L5: "Mejora Continua" };
   const maturityLevelLabel = maturityLabels[maturityLevelValue] || "Sin evaluar";
 
   return {
@@ -1310,7 +1328,7 @@ function buildSummary() {
     complianceLevel,
     maturityLevelValue,
     maturityLevelLabel,
-    avgMaturityScore: Math.round(avgMaturityScore * 4 * 10) / 10,
+    avgMaturityScore: Math.round(avgMaturityScore * 5 * 10) / 10,
     maturityAssessedCount: maturityAssessed.length,
     domainMaturity
   };
@@ -1387,7 +1405,7 @@ function exportResults() {
   const summary = buildSummary();
   const payload = {
     meta: {
-      tool: "CSA LATAM AICM Evaluator 2.0 - Modulo 4",
+      tool: "Evaluación de Controles de Seguridad Cloud para Inteligencia Artificial - Modulo 4",
       date: new Date().toISOString(),
       organization: state.setup.orgName,
       sector: state.setup.sector,
@@ -1442,7 +1460,7 @@ function sendCompletionNotification() {
   const notification = {
     to: recipient,
     subject: `[CSA AICM] Assessment completado - ${state.setup.orgName || "Organización"}`,
-    body: `Estimado/a ${state.setup.owner || "Responsable"},\n\nSe ha completado el assessment AICM para ${state.setup.orgName || "su organización"}.\n\nResultados:\n- Compliance: ${summary.complianceLevel}%\n- Madurez SCF: ${summary.maturityLevelValue} (${summary.maturityLevelLabel})\n- Brechas detectadas: ${summary.findings.length}\n- Controles evaluados: ${summary.answered}/${controls.length}\n\nAcceda al dashboard para revisar el detalle completo.\n\nSaludos,\nCSA LATAM AICM Evaluator`,
+    body: `Estimado/a ${state.setup.owner || "Responsable"},\n\nSe ha completado el assessment AICM para ${state.setup.orgName || "su organización"}.\n\nResultados:\n- Compliance: ${summary.complianceLevel}%\n- Madurez SCF: ${summary.maturityLevelValue} (${summary.maturityLevelLabel})\n- Brechas detectadas: ${summary.findings.length}\n- Controles evaluados: ${summary.answered}/${controls.length}\n\nAcceda al dashboard para revisar el detalle completo.\n\nSaludos,\nEvaluación de Controles de Seguridad Cloud para Inteligencia Artificial`,
     timestamp: new Date().toISOString(),
     status: "enviado (simulado)"
   };

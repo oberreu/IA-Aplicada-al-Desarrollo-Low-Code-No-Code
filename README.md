@@ -7,7 +7,7 @@ La herramienta permite ejecutar un assessment reducido basado en el CSA AI Contr
 ## Alcance
 
 - App estática desplegada en GitHub Pages.
-- 10 controles oficiales del AICM v1.0.3 en español.
+- 6 controles oficiales del AICM v1.0.3 en español.
 - 6 dominios: GRC, AIS, DSP, LOG, MDS, A&A.
 - IDs de control alineados al framework oficial CSA.
 - Respuestas: Sí, Parcial, No y N/A.

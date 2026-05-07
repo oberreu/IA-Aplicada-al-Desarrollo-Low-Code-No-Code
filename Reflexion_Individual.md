@@ -17,7 +17,7 @@ También descubrí que la conexión entre datos, lógica, persistencia y visuali
 ## 4.2 Limitaciones encontradas
 
 - **Persistencia y colaboración:** Firebase resuelve la sincronización individual, pero aún no existe multi-tenancy organizacional ni colaboración por roles entre evaluadores.
-- **Escalabilidad del UI:** Con 10 controles la interfaz funciona bien; con los 243 controles completos del AICM se requeriría paginación, filtros avanzados y búsqueda.
+- **Escalabilidad del UI:** Con 6 controles la interfaz funciona bien para un prototipo; con los 243 controles completos del AICM se requeriría paginación, filtros avanzados y búsqueda.
 - **Validación semántica limitada:** El análisis de evidencia es simulado y basado en keywords/longitud; ayuda a orientar al usuario, pero no verifica formalmente si la evidencia sustenta la respuesta seleccionada.
 - **Limitaciones del Vibe Coding:** Cuando el código generado tiene bugs sutiles (ej. race conditions en renders), diagnosticar requiere entender el código generado. No es completamente "no-code" en la práctica.
 - **Dependencias externas:** Firebase, Chart.js y html2pdf.js dependen de servicios/CDN externos; si no cargan, la app debe degradar de forma controlada.
@@ -28,7 +28,7 @@ También descubrí que la conexión entre datos, lógica, persistencia y visuali
 
 Las herramientas low-code/no-code con IA generativa tienen **valor real e inmediato** para:
 
-- **Prototipos funcionales rápidos:** Validar una idea de producto antes de invertir en desarrollo completo. Este caso es un ejemplo claro: la viabilidad del AICM Evaluator quedó demostrada en horas.
+- **Prototipos funcionales rápidos:** Validar una idea de producto antes de invertir en desarrollo completo. Este caso es un ejemplo claro: la viabilidad de la Evaluación de Controles de Seguridad Cloud para Inteligencia Artificial quedó demostrada en horas.
 - **Herramientas internas:** Dashboards, formularios, calculadoras y utilities que resuelven problemas operativos sin pasar por un ciclo de desarrollo formal.
 - **Profesionales no-dev:** Permite a expertos de dominio (seguridad, GRC, auditoría) construir sus propias herramientas de trabajo.
 
@@ -39,4 +39,4 @@ Las herramientas low-code/no-code con IA generativa tienen **valor real e inmedi
 - **Dependencia de contexto:** La calidad del output depende críticamente de qué tan bien se describe el problema.
 - **No reemplaza desarrollo serio:** Para productos en producción, con múltiples usuarios, integraciones complejas y requisitos de compliance, el desarrollo tradicional sigue siendo necesario.
 
-**Recomendación:** Usar low-code/no-code con IA para la fase 0→1 (validación) y luego decidir si escalar con desarrollo tradicional. En este proyecto, la herramienta validó el caso de uso del AICM Evaluator y ahora la decisión de escalar a producción puede tomarse con evidencia, no con especulación.
+**Recomendación:** Usar low-code/no-code con IA para la fase 0→1 (validación) y luego decidir si escalar con desarrollo tradicional. En este proyecto, la herramienta validó el caso de uso de la Evaluación de Controles de Seguridad Cloud para Inteligencia Artificial y ahora la decisión de escalar a producción puede tomarse con evidencia, no con especulación.

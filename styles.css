@@ -102,6 +102,7 @@ h1 {
 .shell {
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
   max-width: 1440px;
   margin: 0 auto;
   padding: 22px;
@@ -150,9 +151,12 @@ h1 {
 
 .sidebar {
   position: sticky;
-  top: 98px;
-  height: calc(100vh - 120px);
+  top: 22px;
+  align-self: start;
+  min-height: calc(100vh - 44px);
+  max-height: calc(100vh - 44px);
   padding: 12px;
+  overflow-y: auto;
 }
 
 .nav-item {
@@ -482,7 +486,7 @@ body.on-landing .topbar {
 /* Maturity scale grid (landing) */
 .maturity-scale-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 12px;
   text-align: left;
   margin-top: 12px;
@@ -535,6 +539,10 @@ body.on-landing .topbar {
 .mat-card-l4 { border-top-color: #60a5fa; }
 .mat-card-l4 strong { color: #60a5fa; }
 .mat-card-l4 span { color: #60a5fa; }
+
+.mat-card-l5 { border-top-color: #a855f7; }
+.mat-card-l5 strong { color: #a855f7; }
+.mat-card-l5 span { color: #a855f7; }
 
 @media (max-width: 1024px) {
   .maturity-scale-grid {
@@ -839,9 +847,41 @@ textarea:focus {
   flex-shrink: 0;
 }
 
+.results-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 136px);
+  gap: 14px;
+  align-items: stretch;
+  justify-content: end;
+  flex-shrink: 0;
+}
+
+.results-actions .primary-button,
+.results-actions .secondary-button,
+.results-actions .danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 136px;
+  min-height: 64px;
+  margin-top: 0;
+  padding: 10px 14px;
+  text-align: center;
+  line-height: 1.25;
+  white-space: normal;
+}
+
 .domains {
   display: grid;
   gap: 16px;
+}
+
+.assessment-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
 }
 
 .domain-card {
@@ -964,6 +1004,12 @@ textarea:focus {
   border-color: rgba(96, 165, 250, 0.5);
   color: #60a5fa;
   background: rgba(96, 165, 250, 0.08);
+}
+
+.maturity-select.mat-l5 {
+  border-color: rgba(168, 85, 247, 0.5);
+  color: #a855f7;
+  background: rgba(168, 85, 247, 0.08);
 }
 
 /* Maturity domain results */
@@ -1532,6 +1578,18 @@ textarea:focus {
     align-items: stretch;
   }
 
+  .results-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
+  }
+
+  .results-actions .primary-button,
+  .results-actions .secondary-button,
+  .results-actions .danger-button {
+    width: 100%;
+    min-height: 56px;
+  }
+
   .home-copy h2 {
     font-size: 32px;
   }
@@ -1639,34 +1697,57 @@ textarea:focus {
 /* User bar in sidebar */
 .user-bar {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--line);
-  font-size: 12px;
-  color: var(--muted);
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid rgba(249, 115, 22, 0.28);
+  border-radius: var(--radius);
+  background: rgba(249, 115, 22, 0.08);
+}
+
+.user-session {
+  display: grid;
+  gap: 4px;
+}
+
+.user-session-label {
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
 }
 
 .user-email {
-  flex: 1;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .logout-btn {
-  background: none;
-  border: none;
-  color: var(--muted);
+  width: 100%;
+  min-height: 34px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--red);
   cursor: pointer;
-  font-size: 16px;
-  padding: 4px;
-  border-radius: 4px;
-  transition: color .2s;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  transition: background .2s, border-color .2s, color .2s;
 }
 
 .logout-btn:hover {
-  color: var(--red);
+  background: rgba(239, 68, 68, 0.16);
+  border-color: rgba(239, 68, 68, 0.55);
+  color: #fecaca;
 }
 
 /* ─── Radar Chart ─── */
@@ -1736,4 +1817,60 @@ textarea:focus {
 
 .notif-close:hover {
   color: var(--ink);
+}
+
+/* Framework mapping badges */
+.framework-mapping {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 8px;
+}
+
+.fw-badge {
+  font-size: 11px;
+  background: rgba(96, 165, 250, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  color: #93c5fd;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+/* Landing references */
+.landing-references {
+  margin-top: 32px;
+}
+
+.references-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.references-list li {
+  font-size: 14px;
+  color: var(--muted);
+  padding-left: 16px;
+  position: relative;
+}
+
+.references-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.references-list a {
+  color: #93c5fd;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.references-list a:hover {
+  color: #60a5fa;
+  border-bottom-color: #60a5fa;
 }

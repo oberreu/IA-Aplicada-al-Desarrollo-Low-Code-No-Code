@@ -1,4 +1,4 @@
-# Documento Ejecutivo — CSA LATAM AICM Evaluator 2.0
+# Documento Ejecutivo — Evaluación de Controles de Seguridad Cloud para Inteligencia Artificial
 
 **Autor:** Carlos Oberreuter · CSA LATAM Chapter  
 **Fecha:** Mayo 2026 · NTICmaster UCM — Módulo 4 Low-Code / No-Code
@@ -25,7 +25,7 @@ La herramienta permite a un usuario completar un assessment de seguridad de IA e
 - **Proceso que mejora:** Diagnóstico de madurez en AI Security, que pasa de semanas de trabajo manual a horas.
 - **Resultado esperado:** Score global, score por dominio, identificación de brechas críticas y roadmap priorizado 30/60/90 días.
 - **Indicadores de utilidad:**
-  - Tiempo de completar el flujo completo: < 30 minutos (prototipo de 10 controles).
+  - Tiempo de completar el flujo completo: < 20 minutos (prototipo de 6 controles).
   - 100% de controles evaluados generan score y recomendaciones sin intervención manual.
   - Exportación JSON/PDF lista para auditoría o reporting ejecutivo.
 
@@ -49,7 +49,7 @@ No tendría sentido un desarrollo tradicional completo en esta fase porque el ob
 
 **Qué se ha construido:**
 - App web estática funcional publicada en GitHub Pages.
-- 10 controles oficiales AICM v1.0.3 en 6 dominios (GRC, AIS, DSP, LOG, MDS, A&A).
+- 6 controles oficiales AICM v1.0.3 en 6 dominios (GRC, AIS, DSP, LOG, MDS, A&A).
 - Formulario de configuración con validación.
 - Navegación tipo wizard (Inicio → Configuración → Evaluación → Resultados).
 - Registro de evidencia por control (tipo, estado, descripción).
@@ -61,10 +61,10 @@ No tendría sentido un desarrollo tradicional completo en esta fase porque el ob
 - Persistencia local en localStorage como fallback.
 - Exportación JSON/PDF y notificación simulada de cierre.
 
-**Flujo principal que funciona:** Configurar organización → Evaluar 10 controles → Registrar evidencia → Ver dashboard con scores, radar y brechas → Exportar JSON/PDF o emitir notificación simulada.
+**Flujo principal que funciona:** Configurar organización → Evaluar 6 controles → Registrar evidencia → Realizar análisis → Ver dashboard con scores, radar y brechas → Exportar JSON/PDF o emitir notificación simulada.
 
 **No incluido:**
-- Los 243 controles completos del AICM (solo 10 priorizados).
+- Los 243 controles completos del AICM (solo 6 priorizados).
 - Agente/Copiloto IA real para análisis semántico avanzado de evidencia.
 - Integración con sistemas corporativos o tenants cloud.
 - Multi-tenancy organizacional avanzado.

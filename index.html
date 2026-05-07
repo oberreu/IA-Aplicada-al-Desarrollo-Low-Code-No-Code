@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CSA LATAM AICM Evaluator 2.0</title>
-  <link rel="stylesheet" href="styles.css?v=6">
+  <title>Evaluación de Controles de Seguridad Cloud para Inteligencia Artificial</title>
+  <link rel="stylesheet" href="styles.css?v=7">
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -20,8 +20,11 @@
   <main class="shell landing-active" id="appShell">
     <aside class="sidebar" aria-label="Navegación del assessment">
       <div class="user-bar" id="userBar" style="display:none">
-        <span id="userEmail" class="user-email"></span>
-        <button type="button" class="logout-btn" id="logoutBtn" title="Cerrar sesión">⏻</button>
+        <div class="user-session">
+          <span class="user-session-label">Sesión activa</span>
+          <span id="userEmail" class="user-email"></span>
+        </div>
+        <button type="button" class="logout-btn" id="logoutBtn" title="Cerrar sesión">Cerrar sesión</button>
       </div>
       <button class="nav-item active" data-panel="homePanel" type="button">
         <span>01</span>
@@ -47,7 +50,7 @@
         <div class="landing">
           <div class="landing-hero">
             <span class="eyebrow">Cloud Security Alliance · AI Governance · AICM v1.0.3</span>
-            <h2>Evalúa la postura de seguridad en Cloud + IA de tu organización</h2>
+            <h2>Evaluación de Controles de Seguridad Cloud para Inteligencia Artificial</h2>
             <p>
               Prototipo open source impulsado por el <strong>CSA LATAM Chapter</strong> para evaluar
               postura de seguridad en Cloud + IA a partir del <strong>AI Controls Matrix (AICM) v1.0.3</strong>.
@@ -65,7 +68,7 @@
               <span>GRC · AIS · DSP · LOG · MDS · A&A</span>
             </div>
             <div class="feature">
-              <strong>10 controles</strong>
+              <strong>6 controles</strong>
               <span>IDs oficiales del AICM v1.0.3</span>
             </div>
             <div class="feature">
@@ -117,9 +120,9 @@
               </article>
             </div>
 
-            <h4 class="domains-excluded-title">Modelo de madurez: SCF C|P-CMM (L0–L4)</h4>
+            <h4 class="domains-excluded-title">Modelo de madurez: SCF SCR-CMM (L0–L5)</h4>
             <p class="landing-domains-intro">
-              Cada control se evalúa también en nivel de madurez usando la escala <strong>SCF Capability &amp; Process–CMM</strong> (basada en SSE-CMM v2.0),
+              Cada control se evalúa también en nivel de madurez usando la escala <strong>SCF Secure Controls &amp; Risk–CMM</strong> (SCR-CMM),
               adaptada al contexto de IA con el lenguaje del CSA AI Maturity Model (enero 2026). 
               Los niveles de evaluación son:
             </p>
@@ -136,22 +139,27 @@
               </article>
               <article class="mat-level-card mat-card-l2">
                 <strong>L2</strong>
-                <span>Definido</span>
-                <p>Procesos documentados y formalizados. Existe evidencia verificable de implementación.</p>
+                <span>Planificado</span>
+                <p>Procesos documentados y formalizados. Existe evidencia verificable. Umbral de negligencia superado.</p>
               </article>
               <article class="mat-level-card mat-card-l3">
                 <strong>L3</strong>
-                <span>Gestionado</span>
-                <p>Procesos medidos, monitoreados con métricas y mejorados continuamente por los responsables.</p>
+                <span>Bien Definido</span>
+                <p>Procesos estandarizados a nivel organizacional. Seguridad como práctica central documentada.</p>
               </article>
               <article class="mat-level-card mat-card-l4">
                 <strong>L4</strong>
-                <span>Optimizado</span>
-                <p>Prácticas proactivas, predictivas y adaptativas. Mejora continua automatizada con retroalimentación.</p>
+                <span>Controlado Cuantitativamente</span>
+                <p>Gobernanza basada en métricas. Supervisión cuantitativa del desempeño del control.</p>
+              </article>
+              <article class="mat-level-card mat-card-l5">
+                <strong>L5</strong>
+                <span>Mejora Continua</span>
+                <p>Prácticas predictivas con analítica avanzada. Mejora continua automatizada con IA/ML.</p>
               </article>
             </div>
             <p class="landing-note" style="margin-top:12px">
-              Referencias: <em>SCF Secure Controls Framework</em> · <em>SAMA Cybersecurity Framework</em> · <em>CSA AI Maturity Model (2026)</em>
+              Modelo basado en: <em>SCF SCR-CMM</em> · <em>CSA AI Maturity Model (2026)</em> · <em>NIST AI RMF</em>
             </p>
 
             <h4 class="domains-excluded-title">Dominios del AICM no cubiertos en este prototipo</h4>
@@ -217,6 +225,19 @@
                 <p>Control de acceso al conocimiento y datos de entrenamiento según principio de necesidad de saber.</p>
               </article>
             </div>
+          </div>
+
+          <!-- Official References -->
+          <div class="landing-references">
+            <h4 class="domains-excluded-title">Referencias oficiales</h4>
+            <ul class="references-list">
+              <li><a href="https://cloudsecurityalliance.org/artifacts/ai-controls-matrix" target="_blank" rel="noopener">CSA AI Controls Matrix (AICM) v1.0</a> — Cloud Security Alliance, 2024</li>
+              <li><a href="https://www.nist.gov/artificial-intelligence/executive-order-safe-secure-and-trustworthy-artificial-intelligence" target="_blank" rel="noopener">NIST AI Risk Management Framework (AI RMF 1.0)</a> — National Institute of Standards and Technology, 2023</li>
+              <li><a href="https://www.securecontrolsframework.com/scr-cmm" target="_blank" rel="noopener">SCF Secure Controls &amp; Risk–CMM (SCR-CMM)</a> — Secure Controls Framework Council</li>
+              <li><a href="https://www.iso.org/standard/81230.html" target="_blank" rel="noopener">ISO/IEC 42001:2023</a> — Artificial Intelligence Management System (AIMS)</li>
+              <li><a href="https://artificialintelligenceact.eu/" target="_blank" rel="noopener">EU AI Act (Regulation 2024/1689)</a> — European Union, 2024</li>
+              <li><a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank" rel="noopener">OWASP Top 10 for LLM Applications 2025</a> — OWASP Foundation</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -324,10 +345,13 @@
           </div>
           <div class="panel-head-actions">
             <button class="danger-button compact" id="resetBtn" type="button">Reiniciar</button>
-            <button class="primary-button compact" id="viewResultsBtn" type="button">Ver resultados</button>
+            <button class="primary-button compact analysis-trigger" id="viewResultsBtn" type="button">Realizar análisis</button>
           </div>
         </div>
         <div id="controlsContainer" class="domains"></div>
+        <div class="assessment-footer-actions">
+          <button class="primary-button analysis-trigger" id="viewResultsBottomBtn" type="button">Realizar análisis</button>
+        </div>
       </section>
 
       <section class="panel" id="resultsPanel">
@@ -337,16 +361,18 @@
             <h2>Resultados del assessment</h2>
             <p id="resultsIntro">Completa la evaluación para generar resultados.</p>
           </div>
-          <button class="primary-button compact" id="exportBtn" type="button">Exportar JSON</button>
-          <button class="primary-button compact" id="exportPdfBtn" type="button">Exportar PDF</button>
-          <button class="secondary-button compact" id="notifyBtn" type="button">Enviar resumen</button>
-          <button class="danger-button compact" id="deleteAllFilesBtn" type="button">Eliminar archivos</button>
+          <div class="results-actions" aria-label="Acciones del reporte">
+            <button class="primary-button compact" id="exportBtn" type="button">Exportar JSON</button>
+            <button class="primary-button compact" id="exportPdfBtn" type="button">Exportar PDF</button>
+            <button class="secondary-button compact" id="notifyBtn" type="button">Enviar resumen</button>
+            <button class="danger-button compact" id="deleteAllFilesBtn" type="button">Eliminar archivos</button>
+          </div>
         </div>
         <div id="resultsContainer"></div>
       </section>
     </section>
   </main>
 
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

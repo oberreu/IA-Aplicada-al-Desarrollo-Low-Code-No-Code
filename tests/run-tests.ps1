@@ -54,14 +54,20 @@ $referencedIds = Get-Matches $app 'getElementById\("([^"$]+)"\)' | ForEach-Objec
 $missingIds = @($referencedIds | Where-Object { $declaredIds -notcontains $_ })
 Assert-True "IDs referenciados por JS existen" ($missingIds.Count -eq 0) ("IDs sin declarar: " + ($missingIds -join ", "))
 
-$controlMatch = [regex]::Match($app, 'const controls = \[(.*?)\];\s*const answerScores', [System.Text.RegularExpressions.RegexOptions]::Singleline)
+$controlMatch = [regex]::Match($app, 'const aicmControlCatalog = \[(.*?)\];\s*const prototypeControlIds', [System.Text.RegularExpressions.RegexOptions]::Singleline)
 $controlBlock = $controlMatch.Groups[1].Value
 $controlBlockFound = $controlMatch.Success
-$controlIds = Get-Matches $controlBlock 'id:\s*"([^"]+)"' | ForEach-Object { $_.Groups[1].Value }
+$prototypeIds = Get-Matches $app 'const prototypeControlIds = \[(.*?)\];' |
+  ForEach-Object { Get-Matches $_.Groups[1].Value '"([^"]+)"' } |
+  ForEach-Object { $_.Groups[1].Value }
+$controlIds = $prototypeIds
 $duplicateControls = @($controlIds | Group-Object | Where-Object { $_.Count -gt 1 } | ForEach-Object { $_.Name })
-Assert-True "Bloque de controles detectable" $controlBlockFound "No se pudo localizar const controls"
-Assert-True "Cantidad de controles AICM" ($controlIds.Count -eq 10) "Se esperaban 10 controles y hay $($controlIds.Count)"
+Assert-True "Bloque de controles detectable" $controlBlockFound "No se pudo localizar const aicmControlCatalog"
+Assert-True "Cantidad de controles AICM" ($controlIds.Count -eq 6) "Se esperaban 6 controles y hay $($controlIds.Count)"
 Assert-True "IDs de controles unicos" ($duplicateControls.Count -eq 0) ("Duplicados: " + ($duplicateControls -join ", "))
+
+$missingPrototypeCatalogIds = @($prototypeIds | Where-Object { $controlBlock -notmatch ('id:\s*"' + [regex]::Escape($_) + '"') })
+Assert-True "Controles del prototipo existen en catalogo" ($missingPrototypeCatalogIds.Count -eq 0) ("No existen en catalogo: " + ($missingPrototypeCatalogIds -join ", "))
 
 $expectedDomains = @(
   "Governance, Risk and Compliance",
@@ -84,13 +90,15 @@ Assert-True "Fallback Firebase/localStorage" (($app -match 'firebaseAvailable') 
 
 Assert-True "Campos provider y role capturados" (($index -match 'id="provider"') -and ($index -match 'id="role"') -and ($app -match '"provider",\s*"role"')) "Falta provider/role en HTML o persistencia"
 Assert-True "Boton de notificacion conectado" (($index -match 'id="notifyBtn"') -and ($app -match 'notifyBtn"\)\.addEventListener\("click",\s*sendCompletionNotification\)')) "notifyBtn no esta conectado"
+$analysisButtons = Get-Matches $index 'analysis-trigger' | Measure-Object | Select-Object -ExpandProperty Count
+Assert-True "Botones Realizar analisis arriba y abajo" (($analysisButtons -eq 2) -and ($index -notmatch 'Ver resultados') -and ($index -match 'id="viewResultsBottomBtn"') -and ($app -match 'querySelectorAll\("\.analysis-trigger"\)')) "Faltan dos botones Realizar analisis o su handler compartido"
 
 $staleDemoTerms = @("loadSampleData", "GRC-10", "AIS-09", "AIS-10", "LOG-14", "A&A-02") |
   Where-Object { $app -match [regex]::Escape($_) }
 Assert-True "Sin restos de caso demo/IDs antiguos" ($staleDemoTerms.Count -eq 0) ("Restos encontrados: " + ($staleDemoTerms -join ", "))
 
-Assert-True "Documentos sincronizados a 10 controles" `
-  (($readme -match '10 controles') -and ($execDoc -match '10 controles') -and ($reflection -match '10 controles') -and (($readme + $execDoc + $reflection) -notmatch '19 controles')) `
+Assert-True "Documentos sincronizados a 6 controles" `
+  (($readme -match '6 controles') -and ($execDoc -match '6 controles') -and ($reflection -match '6 controles') -and (($readme + $execDoc + $reflection) -notmatch '10 controles|19 controles')) `
   "README/documentos mencionan conteos inconsistentes"
 
 Assert-True "README documenta pruebas" ($readme -match 'tests/run-tests\.ps1') "README no incluye el ciclo de pruebas"

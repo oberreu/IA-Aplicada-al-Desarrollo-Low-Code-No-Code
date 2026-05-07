@@ -1,4 +1,4 @@
-bd47bfe (HEAD -> main, origin/main, origin/gh-pages, origin/HEAD, gh-pages) fix: harden evaluator publishing flow
-3e74cb3 feat: add PDF export, radar chart, and simulated email notification
-4508fc4 feat: add delete all files button in results + cleanup on logout
+442cf91 (HEAD -> main, origin/main, origin/gh-pages, origin/HEAD) add screenshot artifact
+aed3904 docs: rename project to Evaluación de Controles de Seguridad Cloud para IA
+bd47bfe (gh-pages) fix: harden evaluator publishing flow
 

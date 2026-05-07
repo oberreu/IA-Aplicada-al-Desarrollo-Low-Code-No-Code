@@ -1,6 +1,6 @@
 ## main...origin/main
- M README.md
-?? .github/
-?? artifacts/
-?? tests/
+?? artifacts/teacher-evaluation/03-test-runner.png
+?? artifacts/teacher-evaluation/Reporte_Evaluacion_Profesor_AICM.pdf
+?? artifacts/teacher-evaluation/evidence-tests.html
+?? artifacts/teacher-evaluation/reporte-evaluacion-profesor.html
 
