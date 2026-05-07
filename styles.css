@@ -685,6 +685,13 @@ textarea:focus {
   margin-bottom: 20px;
 }
 
+.panel-head-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
 .domains {
   display: grid;
   gap: 16px;

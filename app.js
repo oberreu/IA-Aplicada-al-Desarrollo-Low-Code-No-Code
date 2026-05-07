@@ -351,6 +351,7 @@ function bindEvents() {
 
   document.getElementById("exportBtn").addEventListener("click", exportResults);
   document.getElementById("startFromHomeBtn").addEventListener("click", () => showPanel("setupPanel"));
+  document.getElementById("resetBtn").addEventListener("click", resetAssessment);
 }
 
 function bindChoiceGroup(containerId, field) {
