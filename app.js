@@ -351,8 +351,8 @@ function renderControl(control) {
         </label>
         <label>
           Madurez (SCF)
-          <select id="${control.id}-maturity" class="maturity-select ${maturityClass(mat)}">
-            ${maturityLevels.map(ml => `<option value="${ml.value}" ${selected(mat, ml.value)}>${ml.label}</option>`).join("")}
+          <select id="${control.id}-maturity" class="maturity-select ${maturityClass(mat)}" ${answer === "NA" ? "disabled" : ""}>
+            ${maturityLevels.filter(ml => allowedMaturity(answer).includes(ml.value)).map(ml => `<option value="${ml.value}" ${selected(mat, ml.value)}>${ml.label}</option>`).join("")}
           </select>
         </label>
         <label>
@@ -406,12 +406,28 @@ function maturityClass(value) {
   return map[value] || "";
 }
 
+// Coherence: allowed maturity levels per compliance answer
+function allowedMaturity(answer) {
+  switch (answer) {
+    case "NO":      return ["", "L0", "L1"];
+    case "PARTIAL": return ["", "L1", "L2"];
+    case "YES":     return ["", "L2", "L3", "L4"];
+    case "NA":      return [""];
+    default:        return ["", "L0", "L1", "L2", "L3", "L4"];
+  }
+}
+
 function selected(current, expected) {
   return current === expected ? "selected" : "";
 }
 
 function setAnswer(controlId, value) {
   state.answers[controlId] = value;
+  // Auto-correct maturity if now invalid
+  const allowed = allowedMaturity(value);
+  if (state.maturity[controlId] && !allowed.includes(state.maturity[controlId])) {
+    state.maturity[controlId] = "";
+  }
   persist();
   renderControls();
   updateProgress();
