@@ -447,6 +447,72 @@ body.on-landing .topbar {
   .domain-summary-grid {
     grid-template-columns: 1fr;
   }
+  .maturity-scale-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Maturity scale grid (landing) */
+.maturity-scale-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  text-align: left;
+  margin-top: 12px;
+}
+
+.mat-level-card {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  border-top: 3px solid var(--muted);
+}
+
+.mat-level-card strong {
+  display: inline-block;
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+.mat-level-card span {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.mat-level-card p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.mat-card-l0 { border-top-color: #ef4444; }
+.mat-card-l0 strong { color: #ef4444; }
+.mat-card-l0 span { color: #ef4444; }
+
+.mat-card-l1 { border-top-color: #fb923c; }
+.mat-card-l1 strong { color: #fb923c; }
+.mat-card-l1 span { color: #fb923c; }
+
+.mat-card-l2 { border-top-color: #f59e0b; }
+.mat-card-l2 strong { color: #f59e0b; }
+.mat-card-l2 span { color: #f59e0b; }
+
+.mat-card-l3 { border-top-color: #22c55e; }
+.mat-card-l3 strong { color: #22c55e; }
+.mat-card-l3 span { color: #22c55e; }
+
+.mat-card-l4 { border-top-color: #60a5fa; }
+.mat-card-l4 strong { color: #60a5fa; }
+.mat-card-l4 span { color: #60a5fa; }
+
+@media (max-width: 1024px) {
+  .maturity-scale-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* Excluded domains */
