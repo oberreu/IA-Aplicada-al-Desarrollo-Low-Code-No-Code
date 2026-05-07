@@ -738,13 +738,13 @@ function handleFileUpload(controlId, input) {
 
   // Read file content for AI analysis (first .txt file)
   const textFile = files.find(f => f.type === "text/plain");
-  if (textFile) {
+  if (textFile && state.evidence[controlId].type) {
     const reader = new FileReader();
     reader.onload = () => {
       const analysis = analyzeEvidence(controlId, reader.result);
       state.evidence[controlId].aiAnalysis = analysis;
       // Auto-set evidence status based on AI verdict
-      if (analysis && state.evidence[controlId].type) {
+      if (analysis) {
         const answer = state.answers[controlId] || "";
         const allowed = allowedStatus(state.evidence[controlId].type, answer);
         let suggestedStatus = "";
@@ -759,6 +759,9 @@ function handleFileUpload(controlId, input) {
       renderControls();
     };
     reader.readAsText(textFile);
+  } else if (textFile && !state.evidence[controlId].type) {
+    // No type selected — clear any previous analysis
+    delete state.evidence[controlId].aiAnalysis;
   }
 
   if (!currentUser) {
