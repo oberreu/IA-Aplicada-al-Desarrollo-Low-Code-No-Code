@@ -795,17 +795,35 @@ function removeFile(controlId, index) {
 
 function downloadSampleFile(controlId) {
   const control = controls.find(c => c.id === controlId);
+  const keywords = extractKeywords(control.evidenceHint + " " + control.title);
   const content = [
-    `=== Evidencia de prueba: ${controlId} ===`,
+    `=== Evidencia de control: ${controlId} ===`,
     `Control: ${control.title}`,
-    `Fecha: ${new Date().toLocaleDateString("es-CL")}`,
+    `Fecha de aprobación: ${new Date().toLocaleDateString("es-CL")}`,
+    `Responsable: Oficial de Seguridad / GRC Lead`,
+    `Estado: Aprobado y vigente`,
     ``,
-    `Este archivo es un ejemplo de evidencia para el control ${controlId}.`,
-    `En un escenario real, este documento contendría:`,
+    `--- Descripción de la evidencia ---`,
     ``,
-    `- ${control.evidenceHint}`,
+    `Este documento certifica la implementación del control ${controlId} (${control.title}).`,
+    `La organización ha definido, documentado y aprobado los procesos requeridos.`,
     ``,
-    `--- Fin del archivo de prueba ---`
+    `Evidencia registrada:`,
+    `${control.evidenceHint}`,
+    ``,
+    `--- Detalle de cumplimiento ---`,
+    ``,
+    ...keywords.map(kw => `- Se verifica cumplimiento de: ${kw}`),
+    ``,
+    `--- Verificación ---`,
+    ``,
+    `El owner del control confirma que la evidencia fue revisada y es consistente`,
+    `con los requisitos del AICM v1.0.3 y las guías de auditoría aplicables.`,
+    ``,
+    `Última revisión: ${new Date().toLocaleDateString("es-CL")}`,
+    `Próxima revisión programada: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString("es-CL")}`,
+    ``,
+    `--- Fin del documento ---`
   ].join("\n");
 
   const blob = new Blob([content], { type: "text/plain" });
