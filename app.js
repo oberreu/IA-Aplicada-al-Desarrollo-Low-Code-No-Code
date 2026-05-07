@@ -579,6 +579,25 @@ function updateResultsAccess() {
 function updateProgress() {
   // Progress is now shown only in the results panel
   updateResultsAccess();
+  renderControlsProgress();
+}
+
+function renderControlsProgress() {
+  const container = document.getElementById("controlsProgress");
+  if (!container) return;
+  const html = controls.map(c => {
+    const answered = state.answers[c.id] && state.answers[c.id] !== "";
+    return `<div class="cp-item">
+      <span class="cp-dot ${answered ? "cp-done" : ""}"></span>
+      <span class="cp-label">${c.id}</span>
+    </div>`;
+  }).join("");
+  const total = controls.length;
+  const done = controls.filter(c => state.answers[c.id] && state.answers[c.id] !== "").length;
+  container.innerHTML = `
+    <div class="cp-header"><strong>${done}/${total}</strong> evaluados</div>
+    ${html}
+  `;
 }
 
 function renderResults() {
