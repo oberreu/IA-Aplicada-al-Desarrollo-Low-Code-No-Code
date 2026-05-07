@@ -901,9 +901,17 @@ function renderResults() {
       <article class="result-card">
         <p class="eyebrow">Compliance Score</p>
         <div class="score" style="color:${scoreColor(summary.complianceLevel)}">${summary.complianceLevel}%</div>
-        <span class="level">${summary.maturityLevelValue} – ${summary.maturityLevelLabel}</span>
+        <span class="level">${summary.yesCount} de ${controls.length - summary.naCount} controles conformes</span>
         <div class="progress-track" style="margin-top:12px">
           <div class="progress-bar" style="width:${summary.complianceLevel}%"></div>
+        </div>
+      </article>
+      <article class="result-card">
+        <p class="eyebrow">Maturity Level (SCF C|P-CMM)</p>
+        <div class="score" style="color:${scoreColor(summary.avgMaturityScore / 4 * 100)}">${summary.maturityLevelValue}</div>
+        <span class="level">${summary.maturityLevelLabel} · ${summary.avgMaturityScore}/4.0</span>
+        <div class="progress-track" style="margin-top:12px">
+          <div class="progress-bar" style="width:${summary.avgMaturityScore / 4 * 100}%"></div>
         </div>
       </article>
       <article class="result-card">
