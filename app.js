@@ -419,7 +419,7 @@ function allowedStatus(type, answer) {
   if (!type) return [""];
   switch (answer) {
     case "NO":      return ["", "Pendiente"];
-    case "PARTIAL": return ["", "Parcial", "Pendiente"];
+    case "PARTIAL": return ["", "Suficiente", "Parcial", "Pendiente"];
     case "YES":     return ["", "Suficiente", "Parcial", "Pendiente"];
     default:        return ["", "Suficiente", "Parcial", "Pendiente"];
   }
