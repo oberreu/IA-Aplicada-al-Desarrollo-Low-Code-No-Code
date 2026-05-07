@@ -357,7 +357,7 @@ function renderControl(control) {
         </label>
         <label>
           Tipo evidencia
-          <select id="${control.id}-type">
+          <select id="${control.id}-type" ${answer === "NA" ? "disabled" : ""}>
             <option value="">Sin clasificar</option>
             <option ${selected(evidence.type, "Política")}>Política</option>
             <option ${selected(evidence.type, "Configuración")}>Configuración</option>
@@ -367,7 +367,7 @@ function renderControl(control) {
         </label>
         <label>
           Estado evidencia
-          <select id="${control.id}-status" ${!evidence.type ? "disabled" : ""}>
+          <select id="${control.id}-status" ${!evidence.type || answer === "NA" ? "disabled" : ""}>
             ${allowedStatus(evidence.type, answer).map(s => `<option value="${s}" ${selected(evidence.status, s)}>${s || "No registrada"}</option>`).join("")}
           </select>
         </label>
@@ -436,12 +436,19 @@ function setAnswer(controlId, value) {
   if (state.maturity[controlId] && !allowed.includes(state.maturity[controlId])) {
     state.maturity[controlId] = "";
   }
-  // Auto-correct evidence status if now invalid
-  const ev = state.evidence[controlId] || {};
-  const allowedSt = allowedStatus(ev.type || "", value);
-  if (ev.status && !allowedSt.includes(ev.status)) {
+  // Clear evidence type/status if N/A
+  if (value === "NA") {
     state.evidence[controlId] = state.evidence[controlId] || {};
+    state.evidence[controlId].type = "";
     state.evidence[controlId].status = "";
+  } else {
+    // Auto-correct evidence status if now invalid
+    const ev = state.evidence[controlId] || {};
+    const allowedSt = allowedStatus(ev.type || "", value);
+    if (ev.status && !allowedSt.includes(ev.status)) {
+      state.evidence[controlId] = state.evidence[controlId] || {};
+      state.evidence[controlId].status = "";
+    }
   }
   persist();
   renderControls();
