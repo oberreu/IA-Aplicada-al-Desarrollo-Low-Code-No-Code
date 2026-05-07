@@ -1,4 +1,4 @@
-# CSA LATAM AICM Evaluator 2.0
+# Evaluación de Controles de Seguridad Cloud para Inteligencia Artificial
 
 Prototipo funcional para la tarea del Módulo 4 de Low-Code / No-Code.
 
@@ -48,6 +48,16 @@ Luego abre:
 ```text
 http://localhost:8080
 ```
+
+## Ciclo de pruebas
+
+Ejecuta el runner estático antes de publicar cambios:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tests/run-tests.ps1
+```
+
+Las pruebas validan referencias HTML/JS, IDs usados por `app.js`, cantidad de controles, fallbacks de CDN/Firebase, ausencia de handlers inline y coherencia básica de documentación.
 
 ## Publicación con GitHub Pages
 

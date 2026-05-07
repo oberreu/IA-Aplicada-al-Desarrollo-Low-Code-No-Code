@@ -1,0 +1,21 @@
+[PASS] Archivos base existen
+[PASS] Referencias locales HTML existen
+[PASS] IDs referenciados por JS existen
+[PASS] Bloque de controles detectable
+[PASS] Cantidad de controles AICM
+[PASS] IDs de controles unicos
+[PASS] Dominios esperados presentes
+[PASS] renderFindings declarado
+[PASS] renderFindings no quedo como bloque suelto
+[PASS] Sin handlers inline
+[PASS] Fallback Chart.js
+[PASS] Fallback html2pdf.js
+[PASS] Fallback Firebase/localStorage
+[PASS] Campos provider y role capturados
+[PASS] Boton de notificacion conectado
+[PASS] Sin restos de caso demo/IDs antiguos
+[PASS] Documentos sincronizados a 10 controles
+[PASS] README documenta pruebas
+
+Resultado: 18 prueba(s) OK, 0 fallos.
+
