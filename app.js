@@ -542,6 +542,13 @@ function renderControls() {
     document.querySelectorAll(`.remove-file[data-control="${control.id}"]`).forEach(btn => {
       btn.addEventListener("click", () => removeFile(control.id, parseInt(btn.dataset.index)));
     });
+    // Download sample file
+    document.querySelectorAll(`.download-sample[data-control="${control.id}"]`).forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        downloadSampleFile(control.id);
+      });
+    });
   });
 }
 
@@ -599,7 +606,7 @@ function renderControl(control) {
         <label class="files-label">
           Archivos adjuntos
           <input type="file" id="${control.id}-file" multiple accept=".txt" class="file-input">
-          <span class="file-note">Prototipo: solo archivos .txt (máx. 1 MB)</span>
+          <span class="file-note">Prototipo: solo archivos .txt (máx. 1 MB) · <a href="#" class="download-sample" data-control="${control.id}">Descargar archivo de prueba</a></span>
           ${files.length ? `<ul class="file-list">${files.map((f, i) => `<li><span>${escapeHtml(f.name)}</span><button type="button" class="remove-file" data-control="${control.id}" data-index="${i}">×</button></li>`).join("")}</ul>` : ""}
         </label>
       </div>
@@ -757,6 +764,30 @@ function removeFile(controlId, index) {
   state.evidence[controlId].files.splice(index, 1);
   persist();
   renderControls();
+}
+
+function downloadSampleFile(controlId) {
+  const control = controls.find(c => c.id === controlId);
+  const content = [
+    `=== Evidencia de prueba: ${controlId} ===`,
+    `Control: ${control.title}`,
+    `Fecha: ${new Date().toLocaleDateString("es-CL")}`,
+    ``,
+    `Este archivo es un ejemplo de evidencia para el control ${controlId}.`,
+    `En un escenario real, este documento contendría:`,
+    ``,
+    `- ${control.evidenceHint}`,
+    ``,
+    `--- Fin del archivo de prueba ---`
+  ].join("\n");
+
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `evidencia_prueba_${controlId}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function allControlsAnswered() {

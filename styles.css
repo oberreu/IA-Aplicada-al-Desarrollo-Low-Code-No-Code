@@ -1123,6 +1123,16 @@ textarea:focus {
   font-style: italic;
 }
 
+.file-note .download-sample {
+  color: var(--orange);
+  text-decoration: none;
+  font-style: normal;
+}
+
+.file-note .download-sample:hover {
+  text-decoration: underline;
+}
+
 .hint {
   margin-top: 10px;
   color: var(--muted);
