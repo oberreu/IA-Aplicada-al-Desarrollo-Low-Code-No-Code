@@ -343,6 +343,7 @@ function bindEvents() {
   });
 
   document.getElementById("viewResultsBtn").addEventListener("click", () => {
+    if (!allControlsAnswered()) return;
     saveSetupFromForm({ silent: true });
     renderResults();
     showPanel("resultsPanel");
@@ -365,10 +366,12 @@ function bindChoiceGroup(containerId, field) {
 }
 
 function showPanel(panelId) {
+  if (panelId === "resultsPanel" && !allControlsAnswered()) return;
   panels.forEach(id => document.getElementById(id).classList.toggle("active", id === panelId));
   document.querySelectorAll(".nav-item").forEach(item => {
     item.classList.toggle("active", item.dataset.panel === panelId);
   });
+  updateResultsAccess();
   document.querySelector(".shell").classList.toggle("landing-active", panelId === "homePanel");
   document.body.classList.toggle("on-landing", panelId === "homePanel");
   if (panelId === "resultsPanel") renderResults();
@@ -514,8 +517,21 @@ function setEvidence(controlId, field, value) {
   renderResults();
 }
 
+function allControlsAnswered() {
+  return controls.every(c => state.answers[c.id] && state.answers[c.id] !== "");
+}
+
+function updateResultsAccess() {
+  const ready = allControlsAnswered();
+  const viewBtn = document.getElementById("viewResultsBtn");
+  const navBtn = document.querySelector('.nav-item[data-panel="resultsPanel"]');
+  if (viewBtn) viewBtn.disabled = !ready;
+  if (navBtn) navBtn.disabled = !ready;
+}
+
 function updateProgress() {
   // Progress is now shown only in the results panel
+  updateResultsAccess();
 }
 
 function renderResults() {
