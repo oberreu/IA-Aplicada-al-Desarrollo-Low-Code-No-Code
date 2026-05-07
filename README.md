@@ -1,36 +1,41 @@
 # CSA LATAM AICM Evaluator 2.0
 
-Prototipo funcional para la tarea del Modulo 4 de Low-Code / No-Code.
+Prototipo funcional para la tarea del Módulo 4 de Low-Code / No-Code.
 
-La herramienta permite ejecutar un assessment reducido basado en el CSA AI Controls Matrix (AICM), registrar evidencia, calcular madurez y exportar resultados en JSON.
+La herramienta permite ejecutar un assessment reducido basado en el CSA AI Controls Matrix (AICM v1.0.3), registrar evidencia con análisis simulado de IA, calcular madurez SCF C|P-CMM y exportar resultados en JSON.
 
 ## Alcance
 
-- App estatica sin backend.
-- 19 controles oficiales del AICM v1.0.3 en espanol.
+- App estática desplegada en GitHub Pages.
+- 10 controles oficiales del AICM v1.0.3 en español.
 - 6 dominios: GRC, AIS, DSP, LOG, MDS, A&A.
 - IDs de control alineados al framework oficial CSA.
-- Respuestas: Si, Parcial, No y N/A.
-- Registro de tipo, estado y descripcion de evidencia por control.
-- Guardado automatico en `localStorage`.
-- Dashboard con score global, score por dominio, brechas y roadmap 30/60/90.
-- Exportacion JSON.
+- Respuestas: Sí, Parcial, No y N/A.
+- Modelo de madurez **SCF C|P-CMM** (L0–L4) por control.
+- Validaciones de coherencia: compliance ↔ madurez, compliance ↔ evidencia.
+- Registro de tipo, estado y descripción de evidencia por control.
+- **Análisis simulado de IA** sobre evidencia adjunta (.txt): evalúa cobertura de keywords, genera veredicto y auto-asigna estado de evidencia.
+- Archivo de prueba descargable por control (contiene keywords para pasar el análisis).
+- Validación: si se selecciona tipo de evidencia, se requiere archivo adjunto.
+- **Firebase Integration**:
+  - Autenticación con email/password (registro, login, recuperación de contraseña).
+  - Persistencia en Firestore (sincronización cloud).
+  - Subida de archivos a Firebase Storage (máx. 1 MB, solo .txt para prototipo).
+- Guardado automático local (`localStorage`) como fallback.
+- Dashboard con score de compliance %, nivel de madurez SCF, score por dominio, brechas y roadmap 30/60/90.
+- Exportación JSON.
 
-## Inicio rapido
-
-Para ver la version publica recomendada, abre:
+## Demo
 
 ```text
 https://oberreu.github.io/IA-Aplicada-al-Desarrollo-Low-Code-No-Code/
 ```
 
-Esa URL carga la herramienta funcional publicada con GitHub Pages.
-
 ## Uso local
 
 Abre `index.html` en el navegador.
 
-Tambien puedes servirlo localmente con cualquier servidor estatico:
+También puedes servirlo localmente con cualquier servidor estático:
 
 ```bash
 python3 -m http.server 8080
@@ -42,46 +47,83 @@ Luego abre:
 http://localhost:8080
 ```
 
-## Publicacion con GitHub Pages
+## Publicación con GitHub Pages
 
-Esta app funciona como sitio estatico desde la raiz del repositorio.
-
-Configuracion actual en GitHub:
+Configuración actual en GitHub:
 
 - Repository visibility: Public
 - Pages source: Deploy from a branch
 - Branch: `gh-pages`
 - Folder: `/root`
 
+## Firebase (configuración)
+
+El proyecto utiliza Firebase (plan Spark/Blaze) con los siguientes servicios:
+
+| Servicio | Uso |
+|----------|-----|
+| Authentication | Email/password: registro, login, recuperación |
+| Firestore | Persistencia del estado del assessment por usuario |
+| Storage | Almacenamiento de archivos de evidencia (.txt) |
+
+Para habilitar en un proyecto propio:
+1. Crear proyecto en [Firebase Console](https://console.firebase.google.com)
+2. Habilitar Authentication → Email/Password
+3. Crear Firestore Database (test mode)
+4. Crear Storage (test mode)
+5. Actualizar `firebaseConfig` en `app.js`
+
 ## Flujo principal
 
-1. Completar datos minimos de la organizacion.
-2. Seleccionar proveedor cloud y rol evaluado.
-3. Iniciar evaluacion.
-4. Responder controles y registrar evidencia.
-5. Revisar dashboard ejecutivo.
-6. Exportar resultados en JSON.
+1. Ver página de inicio con descripción de dominios y modelo de madurez.
+2. Click "Iniciar assessment" → panel de configuración.
+3. Completar datos de la organización (nombre, sector, país, responsable).
+4. (Opcional) Registrarse/login para sincronización cloud.
+5. Iniciar evaluación de controles.
+6. Por cada control: responder, asignar madurez, clasificar evidencia, adjuntar archivo.
+7. El análisis IA simulado evalúa el archivo y auto-asigna estado de evidencia.
+8. Revisar dashboard ejecutivo con compliance %, madurez SCF, brechas y roadmap.
+9. Exportar resultados en JSON.
+
+## Análisis de evidencia (IA simulado)
+
+Al subir un archivo `.txt` con tipo de evidencia seleccionado, el sistema:
+
+1. Extrae keywords del `evidenceHint` y `title` del control.
+2. Compara los conceptos clave contra el contenido del documento.
+3. Evalúa cobertura semántica + extensión del texto.
+4. Genera un veredicto con score 0-100:
+   - **≥75**: Evidencia suficiente (verde) → Estado: Suficiente
+   - **40-74**: Evidencia parcial (ámbar) → Estado: Parcial
+   - **<40**: Evidencia insuficiente (rojo) → Estado: Pendiente
+5. Muestra observaciones y sugerencias de mejora.
 
 ## Persistencia
 
-La app guarda el progreso en el navegador con la clave:
+La app guarda el progreso con la siguiente prioridad:
 
-```text
-csaLatamAicmModulo4State
-```
+1. **Firestore** (si el usuario está autenticado): `assessments/{uid}`
+2. **localStorage** (fallback): clave `csaLatamAicmModulo4State`
 
-El boton `Reiniciar` elimina el estado local y comienza una nueva evaluacion.
+El botón `Reiniciar` elimina el estado local y comienza una nueva evaluación.
 
-## Entregable academico
+## Stack técnico
 
-Esta version esta pensada para evidenciar funcionalidad real dentro de un alcance acotado:
+- HTML/CSS/JS puro (sin frameworks ni bundler)
+- Firebase SDK v10.12.0 (compat)
+- GitHub Pages (despliegue estático)
 
-- formularios operativos
-- validacion basica
-- botones con acciones reales
-- gestion de datos local
-- calculo automatico de score
-- recomendaciones derivadas de respuestas
-- exportacion de resultados
+## Entregable académico
 
-No reemplaza auditorias formales ni certificaciones CSA. Es una herramienta de diagnostico y preparacion.
+Esta versión evidencia funcionalidad real dentro de un alcance acotado:
+
+- Formularios operativos con validaciones de coherencia
+- Modelo de madurez SCF C|P-CMM (L0–L4)
+- Análisis simulado de IA sobre evidencia
+- Autenticación y persistencia cloud (Firebase)
+- Cálculo automático de compliance y madurez
+- Recomendaciones de implementación por control
+- Reporte completo de brechas sin límite
+- Exportación de resultados
+
+No reemplaza auditorías formales ni certificaciones CSA. Es una herramienta de diagnóstico y preparación.
