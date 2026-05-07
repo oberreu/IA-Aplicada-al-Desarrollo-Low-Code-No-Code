@@ -437,28 +437,37 @@ function renderControls() {
       const el = document.getElementById(`${control.id}-${field}`);
       el.addEventListener("input", () => setEvidence(control.id, field, el.value));
     });
+    // File upload
+    const fileInput = document.getElementById(`${control.id}-file`);
+    fileInput.addEventListener("change", () => handleFileUpload(control.id, fileInput));
+    // Remove file buttons
+    document.querySelectorAll(`.remove-file[data-control="${control.id}"]`).forEach(btn => {
+      btn.addEventListener("click", () => removeFile(control.id, parseInt(btn.dataset.index)));
+    });
   });
 }
 
 function renderControl(control) {
   const answer = state.answers[control.id] || "";
   const evidence = state.evidence[control.id] || {};
+  const files = evidence.files || [];
   return `
     <div class="control-card">
-      <div class="control-top">
-        <div>
-          <div class="control-id">${control.id}</div>
-          <div class="control-title">${control.title}</div>
-          <p class="control-question">${control.question}</p>
-        </div>
-        <div class="answer-row" aria-label="Respuesta ${control.id}">
-          ${answerButton(control.id, "YES", "Sí", "yes", answer)}
-          ${answerButton(control.id, "PARTIAL", "Parcial", "partial", answer)}
-          ${answerButton(control.id, "NO", "No", "no", answer)}
-          ${answerButton(control.id, "NA", "N/A", "na", answer)}
-        </div>
+      <div class="control-header">
+        <div class="control-id">${control.id}</div>
+        <div class="control-title">${control.title}</div>
       </div>
-      <div class="evidence-grid">
+      <p class="control-question">${control.question}</p>
+      <div class="control-fields">
+        <label>
+          Cumplimiento
+          <div class="answer-row" aria-label="Respuesta ${control.id}">
+            ${answerButton(control.id, "YES", "Sí", "yes", answer)}
+            ${answerButton(control.id, "PARTIAL", "Parcial", "partial", answer)}
+            ${answerButton(control.id, "NO", "No", "no", answer)}
+            ${answerButton(control.id, "NA", "N/A", "na", answer)}
+          </div>
+        </label>
         <label>
           Tipo evidencia
           <select id="${control.id}-type">
@@ -478,9 +487,16 @@ function renderControl(control) {
             <option ${selected(evidence.status, "Pendiente")}>Pendiente</option>
           </select>
         </label>
-        <label>
-          Descripción o enlace interno
-          <textarea id="${control.id}-notes" placeholder="Describe evidencia disponible, owner, link interno o brecha observada.">${escapeHtml(evidence.notes || "")}</textarea>
+      </div>
+      <div class="control-notes-row">
+        <label class="notes-label">
+          Notas
+          <textarea id="${control.id}-notes" placeholder="Observaciones, owner, link interno o brecha observada.">${escapeHtml(evidence.notes || "")}</textarea>
+        </label>
+        <label class="files-label">
+          Archivos adjuntos
+          <input type="file" id="${control.id}-file" multiple class="file-input">
+          ${files.length ? `<ul class="file-list">${files.map((f, i) => `<li><span>${escapeHtml(f.name)}</span><button type="button" class="remove-file" data-control="${control.id}" data-index="${i}">×</button></li>`).join("")}</ul>` : ""}
         </label>
       </div>
       <p class="hint">Evidencia esperada: ${control.evidenceHint}</p>
@@ -515,6 +531,36 @@ function setEvidence(controlId, field, value) {
   state.evidence[controlId][field] = value;
   persist();
   renderResults();
+}
+
+function handleFileUpload(controlId, input) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  state.evidence[controlId] ||= {};
+  state.evidence[controlId].files ||= [];
+
+  const promises = files.map(file => {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve({ name: file.name, size: file.size, type: file.type, data: reader.result });
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  Promise.all(promises).then(results => {
+    state.evidence[controlId].files.push(...results);
+    persist();
+    renderControls();
+  });
+}
+
+function removeFile(controlId, index) {
+  if (!state.evidence[controlId] || !state.evidence[controlId].files) return;
+  state.evidence[controlId].files.splice(index, 1);
+  persist();
+  renderControls();
 }
 
 function allControlsAnswered() {
