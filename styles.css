@@ -1156,7 +1156,7 @@ textarea:focus {
 /* Compliance Summary Table */
 .compliance-summary-table {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2px;
   margin-bottom: 20px;
   border-radius: var(--radius);
@@ -1243,8 +1243,8 @@ textarea:focus {
 }
 
 .cs-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
