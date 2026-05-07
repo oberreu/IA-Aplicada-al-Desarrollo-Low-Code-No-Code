@@ -367,11 +367,8 @@ function renderControl(control) {
         </label>
         <label>
           Estado evidencia
-          <select id="${control.id}-status">
-            <option value="">No registrada</option>
-            <option ${selected(evidence.status, "Suficiente")}>Suficiente</option>
-            <option ${selected(evidence.status, "Parcial")}>Parcial</option>
-            <option ${selected(evidence.status, "Pendiente")}>Pendiente</option>
+          <select id="${control.id}-status" ${!evidence.type ? "disabled" : ""}>
+            ${allowedStatus(evidence.type, answer).map(s => `<option value="${s}" ${selected(evidence.status, s)}>${s || "No registrada"}</option>`).join("")}
           </select>
         </label>
       </div>
@@ -417,6 +414,17 @@ function allowedMaturity(answer) {
   }
 }
 
+// Coherence: allowed evidence status per type + compliance
+function allowedStatus(type, answer) {
+  if (!type) return [""];
+  switch (answer) {
+    case "NO":      return ["", "Pendiente"];
+    case "PARTIAL": return ["", "Parcial", "Pendiente"];
+    case "YES":     return ["", "Suficiente", "Parcial", "Pendiente"];
+    default:        return ["", "Suficiente", "Parcial", "Pendiente"];
+  }
+}
+
 function selected(current, expected) {
   return current === expected ? "selected" : "";
 }
@@ -427,6 +435,13 @@ function setAnswer(controlId, value) {
   const allowed = allowedMaturity(value);
   if (state.maturity[controlId] && !allowed.includes(state.maturity[controlId])) {
     state.maturity[controlId] = "";
+  }
+  // Auto-correct evidence status if now invalid
+  const ev = state.evidence[controlId] || {};
+  const allowedSt = allowedStatus(ev.type || "", value);
+  if (ev.status && !allowedSt.includes(ev.status)) {
+    state.evidence[controlId] = state.evidence[controlId] || {};
+    state.evidence[controlId].status = "";
   }
   persist();
   renderControls();
@@ -444,7 +459,16 @@ function setMaturity(controlId, value) {
 function setEvidence(controlId, field, value) {
   state.evidence[controlId] ||= {};
   state.evidence[controlId][field] = value;
+  // Auto-correct status if type changes and status is now invalid
+  if (field === "type") {
+    const answer = state.answers[controlId] || "";
+    const allowed = allowedStatus(value, answer);
+    if (state.evidence[controlId].status && !allowed.includes(state.evidence[controlId].status)) {
+      state.evidence[controlId].status = "";
+    }
+  }
   persist();
+  renderControls();
   renderResults();
 }
 
