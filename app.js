@@ -8,10 +8,27 @@ const firebaseConfig = {
   appId: "1:871287119450:web:4824f9ff2cdc4ce8880263"
 };
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
+const firebaseAvailable = typeof firebase !== "undefined" && typeof firebase.initializeApp === "function";
+let auth = null;
+let db = null;
+let storage = null;
+
+if (firebaseAvailable) {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    auth = typeof firebase.auth === "function" ? firebase.auth() : null;
+    db = typeof firebase.firestore === "function" ? firebase.firestore() : null;
+    storage = typeof firebase.storage === "function" ? firebase.storage() : null;
+    if (!auth || !db || !storage) throw new Error("Firebase SDK incompleto");
+  } catch (err) {
+    console.warn("Firebase no pudo inicializarse. La app funcionará solo con localStorage.", err);
+    auth = null;
+    db = null;
+    storage = null;
+  }
+} else {
+  console.warn("Firebase SDK no disponible. La app funcionará solo con localStorage.");
+}
 
 let currentUser = null;
 
@@ -298,6 +315,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // --- Auth Logic ---
 function initAuth() {
+  if (!auth) {
+    updateAuthUnavailableUI();
+    return;
+  }
+
   auth.onAuthStateChanged(user => {
     currentUser = user;
     updateAuthUI();
@@ -489,26 +511,14 @@ function bindEvents() {
     saveSetupFromForm({ silent: true });
     renderResults();
     showPanel("resultsPanel");
-    sendCompletionNotification();
   });
 
   document.getElementById("exportBtn").addEventListener("click", exportResults);
   document.getElementById("exportPdfBtn").addEventListener("click", exportPdf);
+  document.getElementById("notifyBtn").addEventListener("click", sendCompletionNotification);
   document.getElementById("deleteAllFilesBtn").addEventListener("click", deleteAllFiles);
   document.getElementById("startFromHomeBtn").addEventListener("click", () => showPanel("setupPanel"));
   document.getElementById("resetBtn").addEventListener("click", resetAssessment);
-}
-
-function bindChoiceGroup(containerId, field) {
-  const container = document.getElementById(containerId);
-  container.querySelectorAll(".choice").forEach(button => {
-    button.addEventListener("click", () => {
-      container.querySelectorAll(".choice").forEach(item => item.classList.remove("selected"));
-      button.classList.add("selected");
-      state.setup[field] = button.dataset.value;
-      persist();
-    });
-  });
 }
 
 function showPanel(panelId) {
@@ -549,6 +559,10 @@ function saveSetupFromForm(options = {}) {
   if (!missing.length) {
     required.forEach(id => {
       state.setup[id] = document.getElementById(id).value.trim();
+    });
+    ["provider", "role"].forEach(id => {
+      const input = document.getElementById(id);
+      if (input) state.setup[id] = input.value;
     });
     error.textContent = "";
     persist();
@@ -1169,6 +1183,10 @@ function renderResults() {
 function renderRadarChart(summary) {
   const canvas = document.getElementById("radarChart");
   if (!canvas) return;
+  if (typeof Chart === "undefined") {
+    canvas.parentElement.innerHTML = `<div class="empty-state">No se pudo cargar Chart.js. El resto del reporte sigue disponible.</div>`;
+    return;
+  }
 
   // Destroy previous chart instance if exists
   if (window._radarChartInstance) {
@@ -1212,6 +1230,8 @@ function renderRadarChart(summary) {
     }
   });
 }
+
+function renderFindings(findings) {
   if (!findings.length) {
     return `<div class="empty-state">No hay brechas críticas registradas. Revisa controles marcados como N/A o evidencia pendiente antes de cerrar el assessment.</div>`;
   }
@@ -1272,18 +1292,6 @@ function buildSummary() {
     return { domain, avg: Math.round(avg * 4 * 10) / 10, assessed: assessed.length, total: domControls.length };
   });
 
-  // Legacy maturity (1-5 from compliance %)
-  let maturity = 1;
-  if (complianceLevel >= 90) maturity = 5;
-  else if (complianceLevel >= 75) maturity = 4;
-  else if (complianceLevel >= 55) maturity = 3;
-  else if (complianceLevel >= 35) maturity = 2;
-
-  // Certification status
-  let certStatus = "Non-Compliant";
-  if (complianceLevel === 100) certStatus = "Compliant";
-  else if (complianceLevel >= 80) certStatus = "Partially Compliant";
-
   // SCF Maturity level label
   const maturityLabels = { L0: "Inexistente", L1: "Ad Hoc", L2: "Definido", L3: "Gestionado", L4: "Optimizado" };
   const maturityLevelLabel = maturityLabels[maturityLevelValue] || "Sin evaluar";
@@ -1316,14 +1324,6 @@ function calculateScore(items) {
     return sum + (answerScores[state.answers[control.id]] || 0) * control.weight;
   }, 0);
   return Math.round(got / max * 100);
-}
-
-function maturityLevel(score, answered) {
-  if (!answered) return "Sin evaluación";
-  if (score >= 80) return "Compliant";
-  if (score >= 60) return "Parcialmente compliant";
-  if (score >= 40) return "En desarrollo";
-  return "No compliant";
 }
 
 function buildFindings() {
@@ -1413,6 +1413,10 @@ function exportResults() {
 function exportPdf() {
   const container = document.getElementById("resultsContainer");
   if (!container) return;
+  if (typeof html2pdf === "undefined") {
+    alert("No se pudo cargar html2pdf.js. Intenta nuevamente con conexión a internet o usa la exportación JSON.");
+    return;
+  }
 
   const opt = {
     margin: [10, 10, 10, 10],
@@ -1427,11 +1431,16 @@ function exportPdf() {
 
 // --- Simulated email notification ---
 function sendCompletionNotification() {
-  const email = currentUser ? currentUser.email : (state.setup.owner || "usuario");
+  if (!allControlsAnswered()) {
+    alert("Completa todos los controles antes de enviar el resumen.");
+    return;
+  }
+
+  const recipient = currentUser ? currentUser.email : (state.setup.owner || "responsable del assessment");
   const summary = buildSummary();
 
   const notification = {
-    to: email,
+    to: recipient,
     subject: `[CSA AICM] Assessment completado - ${state.setup.orgName || "Organización"}`,
     body: `Estimado/a ${state.setup.owner || "Responsable"},\n\nSe ha completado el assessment AICM para ${state.setup.orgName || "su organización"}.\n\nResultados:\n- Compliance: ${summary.complianceLevel}%\n- Madurez SCF: ${summary.maturityLevelValue} (${summary.maturityLevelLabel})\n- Brechas detectadas: ${summary.findings.length}\n- Controles evaluados: ${summary.answered}/${controls.length}\n\nAcceda al dashboard para revisar el detalle completo.\n\nSaludos,\nCSA LATAM AICM Evaluator`,
     timestamp: new Date().toISOString(),
@@ -1458,66 +1467,39 @@ function showNotificationBanner(notification) {
   const banner = document.createElement("div");
   banner.className = "notification-banner";
   banner.innerHTML = `
-    <div class="notif-icon">📧</div>
+    <div class="notif-icon">Email</div>
     <div class="notif-content">
       <strong>Notificación enviada (simulado)</strong>
-      <p>Para: ${notification.to}</p>
-      <p>Asunto: ${notification.subject}</p>
+      <p>Para: ${escapeHtml(notification.to)}</p>
+      <p>Asunto: ${escapeHtml(notification.subject)}</p>
     </div>
-    <button class="notif-close" onclick="this.parentElement.remove()">×</button>
+    <button class="notif-close" type="button" aria-label="Cerrar notificación">×</button>
   `;
   document.body.appendChild(banner);
+  banner.querySelector(".notif-close").addEventListener("click", () => banner.remove());
   setTimeout(() => banner.remove(), 8000);
 }
 
-function loadSampleData() {
-  state = {
-    setup: {
-      orgName: "Banco Andina S.A.",
-      sector: "Banca y servicios financieros",
-      country: "Chile",
-      owner: "Andrea Silva, GRC Lead",
-      provider: "Azure",
-      role: "AI Client"
-    },
-    answers: {
-      "GRC-01": "PARTIAL",
-      "GRC-02": "YES",
-      "GRC-10": "NO",
-      "GRC-15": "PARTIAL",
-      "AIS-08": "PARTIAL",
-      "AIS-09": "NO",
-      "AIS-10": "YES",
-      "AIS-15": "NO",
-      "DSP-17": "PARTIAL",
-      "DSP-20": "NO",
-      "DSP-21": "NO",
-      "LOG-01": "PARTIAL",
-      "LOG-14": "NO",
-      "LOG-15": "NO",
-      "MDS-01": "PARTIAL",
-      "MDS-06": "NO",
-      "MDS-10": "NO",
-      "A&A-01": "PARTIAL",
-      "A&A-02": "NO"
-    },
-    evidence: {
-      "GRC-01": { type: "Política", status: "Parcial", notes: "Borrador aprobado por seguridad, pendiente comité de riesgo." },
-      "GRC-02": { type: "Log/Reporte", status: "Suficiente", notes: "Programa AIRM inicial documentado con registro de riesgos." },
-      "GRC-10": { type: "Ticket/Acta", status: "Pendiente", notes: "No existe AI Impact Assessment formal." },
-      "AIS-08": { type: "Configuración", status: "Parcial", notes: "Validaciones básicas implementadas; faltan pruebas adversariales." },
-      "DSP-17": { type: "Política", status: "Parcial", notes: "Clasificación de datos existe pero sin controles DLP específicos para IA." },
-      "LOG-14": { type: "Log/Reporte", status: "Pendiente", notes: "Logs técnicos existen pero no cubren inputs al modelo." },
-      "MDS-06": { type: "Ticket/Acta", status: "Pendiente", notes: "No se han realizado pruebas adversariales al modelo." }
-    },
-    updatedAt: new Date().toISOString()
-  };
-  persist();
-  renderSetup();
-  renderControls();
-  updateProgress();
-  renderResults();
-  showPanel("resultsPanel");
+function updateAuthUnavailableUI() {
+  const authSection = document.getElementById("authSection");
+  const authForm = document.getElementById("authForm");
+  const authLogged = document.getElementById("authLogged");
+  const authError = document.getElementById("authError");
+  const userBar = document.getElementById("userBar");
+
+  if (authForm) authForm.style.display = "none";
+  if (authLogged) authLogged.style.display = "none";
+  if (userBar) userBar.style.display = "none";
+  if (authSection) {
+    const subtitle = authSection.querySelector(".auth-subtitle");
+    const note = authSection.querySelector(".auth-note");
+    if (subtitle) subtitle.textContent = "Sincronización cloud no disponible. El progreso se guardará localmente en este navegador.";
+    if (note) note.style.display = "none";
+  }
+  if (authError) {
+    authError.style.color = "var(--amber)";
+    authError.textContent = "Modo local activo: Firebase no pudo cargarse.";
+  }
 }
 
 function resetAssessment() {

@@ -22,8 +22,10 @@ La herramienta permite ejecutar un assessment reducido basado en el CSA AI Contr
   - Persistencia en Firestore (sincronización cloud).
   - Subida de archivos a Firebase Storage (máx. 1 MB, solo .txt para prototipo).
 - Guardado automático local (`localStorage`) como fallback.
-- Dashboard con score de compliance %, nivel de madurez SCF, score por dominio, brechas y roadmap 30/60/90.
-- Exportación JSON.
+- Modo local automático si Firebase SDK no está disponible.
+- Dashboard con score de compliance %, nivel de madurez SCF, score por dominio, radar de madurez, brechas y roadmap 30/60/90.
+- Exportación JSON y PDF.
+- Notificación de cierre simulada con resumen ejecutivo del assessment.
 
 ## Demo
 
@@ -82,8 +84,8 @@ Para habilitar en un proyecto propio:
 5. Iniciar evaluación de controles.
 6. Por cada control: responder, asignar madurez, clasificar evidencia, adjuntar archivo.
 7. El análisis IA simulado evalúa el archivo y auto-asigna estado de evidencia.
-8. Revisar dashboard ejecutivo con compliance %, madurez SCF, brechas y roadmap.
-9. Exportar resultados en JSON.
+8. Revisar dashboard ejecutivo con compliance %, madurez SCF, radar por dominio, brechas y roadmap.
+9. Exportar resultados en JSON/PDF o generar notificación simulada de cierre.
 
 ## Análisis de evidencia (IA simulado)
 
@@ -122,8 +124,10 @@ Esta versión evidencia funcionalidad real dentro de un alcance acotado:
 - Análisis simulado de IA sobre evidencia
 - Autenticación y persistencia cloud (Firebase)
 - Cálculo automático de compliance y madurez
+- Radar de madurez por dominio y reporte PDF
+- Notificación simulada de cierre del assessment
 - Recomendaciones de implementación por control
 - Reporte completo de brechas sin límite
-- Exportación de resultados
+- Exportación de resultados en JSON y PDF
 
 No reemplaza auditorías formales ni certificaciones CSA. Es una herramienta de diagnóstico y preparación.

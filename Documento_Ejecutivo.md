@@ -25,9 +25,9 @@ La herramienta permite a un usuario completar un assessment de seguridad de IA e
 - **Proceso que mejora:** Diagnóstico de madurez en AI Security, que pasa de semanas de trabajo manual a horas.
 - **Resultado esperado:** Score global, score por dominio, identificación de brechas críticas y roadmap priorizado 30/60/90 días.
 - **Indicadores de utilidad:**
-  - Tiempo de completar el flujo completo: < 30 minutos (prototipo de 19 controles).
+  - Tiempo de completar el flujo completo: < 30 minutos (prototipo de 10 controles).
   - 100% de controles evaluados generan score y recomendaciones sin intervención manual.
-  - Exportación JSON lista para auditoría o reporting ejecutivo.
+  - Exportación JSON/PDF lista para auditoría o reporting ejecutivo.
 
 ---
 
@@ -37,7 +37,7 @@ La herramienta fue construida mediante **Vibe Coding con IA generativa** (GitHub
 
 - **Rapidez:** Prototipo funcional completo en horas, no semanas.
 - **Validación temprana:** Permite comprobar la viabilidad del caso de uso antes de invertir en arquitectura compleja.
-- **Reducción de costos:** Sin infraestructura, sin backend, sin licencias de plataforma.
+- **Reducción de costos:** Sin infraestructura propia ni licencias de plataforma; la sincronización cloud se resuelve con Firebase.
 - **Iteración rápida:** Cambios en controles, dominios y lógica de scoring se aplican inmediatamente.
 - **Sin programación avanzada requerida:** El modelo genera la lógica; el profesional de seguridad define qué construir, no cómo.
 
@@ -49,25 +49,30 @@ No tendría sentido un desarrollo tradicional completo en esta fase porque el ob
 
 **Qué se ha construido:**
 - App web estática funcional publicada en GitHub Pages.
-- 19 controles oficiales AICM v1.0.3 en 6 dominios (GRC, AIS, DSP, LOG, MDS, A&A).
+- 10 controles oficiales AICM v1.0.3 en 6 dominios (GRC, AIS, DSP, LOG, MDS, A&A).
 - Formulario de configuración con validación.
 - Navegación tipo wizard (Inicio → Configuración → Evaluación → Resultados).
 - Registro de evidencia por control (tipo, estado, descripción).
-- Cálculo automático de score global y por dominio.
+- Análisis simulado de IA sobre evidencia `.txt`, con score, observaciones y sugerencias.
+- Cálculo automático de score global, madurez SCF y score por dominio.
+- Radar de madurez por dominio.
 - Identificación de brechas priorizadas con roadmap.
-- Persistencia en localStorage y exportación JSON.
-- Caso de referencia precargable.
+- Autenticación email/password, persistencia en Firestore y subida de evidencia a Firebase Storage.
+- Persistencia local en localStorage como fallback.
+- Exportación JSON/PDF y notificación simulada de cierre.
 
-**Flujo principal que funciona:** Configurar organización → Evaluar 19 controles → Registrar evidencia → Ver dashboard con scores y brechas → Exportar JSON.
+**Flujo principal que funciona:** Configurar organización → Evaluar 10 controles → Registrar evidencia → Ver dashboard con scores, radar y brechas → Exportar JSON/PDF o emitir notificación simulada.
 
 **No incluido:**
-- Los 243 controles completos del AICM (solo 19 priorizados).
-- Agente/Copiloto IA para análisis automático de evidencia.
+- Los 243 controles completos del AICM (solo 10 priorizados).
+- Agente/Copiloto IA real para análisis semántico avanzado de evidencia.
 - Integración con sistemas corporativos o tenants cloud.
-- Autenticación de usuarios o multi-tenancy.
-- Validación automática de evidencia documental.
+- Multi-tenancy organizacional avanzado.
+- Validación automática formal de evidencia documental.
 
 **Limitaciones:**
-- Sin backend ni base de datos persistente (solo localStorage del navegador).
+- Firebase se usa como backend administrado para autenticación, persistencia y archivos; no existe backend propio.
+- El análisis de evidencia es simulado y basado en keywords, por lo que no reemplaza una revisión documental experta.
+- La evidencia adjunta se limita a archivos `.txt` de hasta 1 MB en esta versión.
 - No reemplaza auditoría formal ni juicio experto de evaluadores certificados.
 - Alcance reducido para demostrar viabilidad, no para producción.

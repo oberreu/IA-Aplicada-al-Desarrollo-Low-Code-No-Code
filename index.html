@@ -257,6 +257,28 @@
               Responsable
               <input id="owner" name="owner" type="text" placeholder="Ej. Andrea Silva, GRC Lead" required minlength="3" maxlength="100" pattern="[A-Za-zÀ-ÿ0-9\s.,\-]+" title="Solo letras, números, espacios y puntuación básica">
             </label>
+            <label>
+              Proveedor cloud principal
+              <select id="provider" name="provider">
+                <option>Azure</option>
+                <option>AWS</option>
+                <option>Google Cloud</option>
+                <option>Oracle Cloud</option>
+                <option>IBM Cloud</option>
+                <option>Multi-cloud</option>
+                <option>Otro / No definido</option>
+              </select>
+            </label>
+            <label>
+              Rol frente al sistema de IA
+              <select id="role" name="role">
+                <option>AI Client</option>
+                <option>AI Provider</option>
+                <option>AI Developer</option>
+                <option>AI Integrator</option>
+                <option>AI Auditor</option>
+              </select>
+            </label>
           </div>
 
           <p class="form-error" id="setupError" role="alert"></p>
@@ -317,6 +339,7 @@
           </div>
           <button class="primary-button compact" id="exportBtn" type="button">Exportar JSON</button>
           <button class="primary-button compact" id="exportPdfBtn" type="button">Exportar PDF</button>
+          <button class="secondary-button compact" id="notifyBtn" type="button">Enviar resumen</button>
           <button class="danger-button compact" id="deleteAllFilesBtn" type="button">Eliminar archivos</button>
         </div>
         <div id="resultsContainer"></div>

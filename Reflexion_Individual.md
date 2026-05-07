@@ -10,17 +10,17 @@ El desarrollo de esta herramienta demostró que el enfoque de Vibe Coding con IA
 
 Aprendí que la clave para un buen resultado no es la herramienta de IA en sí, sino la calidad del contexto que se le proporciona. Definir con precisión los controles AICM, sus dominios y la lógica de evaluación antes de generar código produce resultados muy superiores a iterar sin dirección. El proceso de construcción fue iterativo: generar, probar en el navegador, identificar brechas funcionales y solicitar correcciones específicas.
 
-También descubrí que la conexión entre datos, lógica y visualización en una SPA sin framework es sorprendentemente manejable cuando la IA genera el scaffolding correcto. localStorage como mecanismo de persistencia es suficiente para un prototipo y elimina toda la complejidad de backend.
+También descubrí que la conexión entre datos, lógica, persistencia y visualización en una SPA sin framework es sorprendentemente manejable cuando la IA genera el scaffolding correcto. localStorage es suficiente como fallback, y Firebase permite agregar autenticación, sincronización cloud y almacenamiento de evidencia sin construir un backend propio.
 
 ---
 
 ## 4.2 Limitaciones encontradas
 
-- **Persistencia limitada:** localStorage no permite compartir datos entre dispositivos ni colaborar entre usuarios. Un prototipo más avanzado requeriría backend o al menos sincronización cloud.
-- **Escalabilidad del UI:** Con 19 controles la interfaz funciona bien; con los 243 controles completos del AICM se requeriría paginación, filtros avanzados y búsqueda.
-- **Sin validación semántica de evidencia:** El usuario describe evidencia en texto libre, pero no hay verificación automática de si la evidencia realmente sustenta la respuesta seleccionada.
+- **Persistencia y colaboración:** Firebase resuelve la sincronización individual, pero aún no existe multi-tenancy organizacional ni colaboración por roles entre evaluadores.
+- **Escalabilidad del UI:** Con 10 controles la interfaz funciona bien; con los 243 controles completos del AICM se requeriría paginación, filtros avanzados y búsqueda.
+- **Validación semántica limitada:** El análisis de evidencia es simulado y basado en keywords/longitud; ayuda a orientar al usuario, pero no verifica formalmente si la evidencia sustenta la respuesta seleccionada.
 - **Limitaciones del Vibe Coding:** Cuando el código generado tiene bugs sutiles (ej. race conditions en renders), diagnosticar requiere entender el código generado. No es completamente "no-code" en la práctica.
-- **Sin autenticación:** No se implementó login porque complica significativamente una app estática sin backend.
+- **Dependencias externas:** Firebase, Chart.js y html2pdf.js dependen de servicios/CDN externos; si no cargan, la app debe degradar de forma controlada.
 
 ---
 
