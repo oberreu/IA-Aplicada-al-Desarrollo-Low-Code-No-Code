@@ -613,6 +613,7 @@ function renderControl(control) {
           <input type="file" id="${control.id}-file" multiple accept=".txt" class="file-input">
           <span class="file-note">Prototipo: solo archivos .txt (máx. 1 MB) · <a href="#" class="download-sample" data-control="${control.id}">Descargar archivo de prueba</a></span>
           ${files.length ? `<ul class="file-list">${files.map((f, i) => `<li><span>${escapeHtml(f.name)}</span><button type="button" class="remove-file" data-control="${control.id}" data-index="${i}">×</button></li>`).join("")}</ul>` : ""}
+          ${evidence.aiAnalysis ? renderAIAnalysis(evidence.aiAnalysis) : ""}
         </label>
       </div>
       <p class="hint">Evidencia esperada: ${control.evidenceHint}</p>
@@ -735,7 +736,28 @@ function handleFileUpload(controlId, input) {
   state.evidence[controlId] ||= {};
   state.evidence[controlId].files ||= [];
 
-  if (!currentUser) return;
+  // Read file content for AI analysis (first .txt file)
+  const textFile = files.find(f => f.type === "text/plain");
+  if (textFile) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const analysis = analyzeEvidence(controlId, reader.result);
+      state.evidence[controlId].aiAnalysis = analysis;
+      persist();
+      renderControls();
+    };
+    reader.readAsText(textFile);
+  }
+
+  if (!currentUser) {
+    // Save locally without Firebase upload
+    files.forEach(f => {
+      state.evidence[controlId].files.push({ name: f.name, size: f.size, type: f.type });
+    });
+    persist();
+    renderControls();
+    return;
+  }
 
   const uploadPromises = files.map(file => {
     const path = `evidence/${currentUser.uid}/${controlId}/${Date.now()}_${file.name}`;
@@ -793,6 +815,104 @@ function downloadSampleFile(controlId) {
   a.download = `evidencia_prueba_${controlId}.txt`;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+// --- AI Evidence Analysis (Simulated) ---
+function analyzeEvidence(controlId, fileContent) {
+  const control = controls.find(c => c.id === controlId);
+  if (!control) return null;
+
+  const text = fileContent.toLowerCase();
+  const hintKeywords = extractKeywords(control.evidenceHint);
+  const titleKeywords = extractKeywords(control.title);
+  const allKeywords = [...new Set([...hintKeywords, ...titleKeywords])];
+
+  // Calculate coverage
+  const matched = allKeywords.filter(kw => text.includes(kw));
+  const coverage = allKeywords.length > 0 ? Math.round((matched.length / allKeywords.length) * 100) : 0;
+
+  // Length quality factor
+  const wordCount = fileContent.trim().split(/\s+/).length;
+  const lengthFactor = Math.min(wordCount / 50, 1); // Optimal at 50+ words
+
+  // Final score combines coverage and length
+  const score = Math.min(100, Math.round(coverage * 0.7 + lengthFactor * 30));
+
+  // Generate observations
+  const observations = [];
+  if (matched.length > 0) {
+    observations.push(`Se detectaron ${matched.length} de ${allKeywords.length} conceptos clave esperados: ${matched.slice(0, 5).join(", ")}${matched.length > 5 ? "..." : ""}.`);
+  }
+  if (matched.length === 0) {
+    observations.push("No se detectaron conceptos clave del control en el documento.");
+  }
+  const missing = allKeywords.filter(kw => !text.includes(kw));
+  if (missing.length > 0 && missing.length <= 5) {
+    observations.push(`Conceptos no encontrados: ${missing.join(", ")}.`);
+  } else if (missing.length > 5) {
+    observations.push(`Faltan ${missing.length} conceptos esperados. Se recomienda ampliar la documentación.`);
+  }
+  if (wordCount < 20) {
+    observations.push("El documento es muy breve. Se recomienda incluir más detalle.");
+  }
+
+  // Verdict
+  let verdict, verdictClass;
+  if (score >= 75) {
+    verdict = "Evidencia suficiente";
+    verdictClass = "ai-pass";
+  } else if (score >= 40) {
+    verdict = "Evidencia parcial";
+    verdictClass = "ai-partial";
+  } else {
+    verdict = "Evidencia insuficiente";
+    verdictClass = "ai-fail";
+  }
+
+  // Suggestions
+  const suggestions = [];
+  if (score < 75) {
+    if (!text.includes("fecha") && !text.includes("date")) {
+      suggestions.push("Incluir fechas de aprobación o vigencia.");
+    }
+    if (!text.includes("responsable") && !text.includes("owner") && !text.includes("aprobado")) {
+      suggestions.push("Documentar el responsable o aprobador.");
+    }
+    if (missing.length > 0) {
+      suggestions.push(`Agregar información sobre: ${missing.slice(0, 3).join(", ")}.`);
+    }
+  }
+
+  return { score, verdict, verdictClass, observations, suggestions, wordCount, timestamp: new Date().toISOString() };
+}
+
+function extractKeywords(text) {
+  const stopwords = ["la", "el", "de", "del", "en", "con", "para", "por", "que", "una", "un", "los", "las", "al", "se", "ha", "y", "o", "a", "su", "son", "como", "está", "ej"];
+  return text.toLowerCase()
+    .replace(/[.,;:()¿?¡!]/g, " ")
+    .split(/\s+/)
+    .filter(w => w.length > 3 && !stopwords.includes(w))
+    .slice(0, 15);
+}
+
+function renderAIAnalysis(analysis) {
+  if (!analysis) return "";
+  return `
+    <div class="ai-analysis ${analysis.verdictClass}">
+      <div class="ai-header">
+        <span class="ai-badge">🤖 Análisis IA (simulado)</span>
+        <span class="ai-score">${analysis.score}/100</span>
+      </div>
+      <div class="ai-verdict">${analysis.verdict}</div>
+      <ul class="ai-observations">${analysis.observations.map(o => `<li>${o}</li>`).join("")}</ul>
+      ${analysis.suggestions.length ? `
+        <div class="ai-suggestions">
+          <strong>Sugerencias para mejorar:</strong>
+          <ul>${analysis.suggestions.map(s => `<li>${s}</li>`).join("")}</ul>
+        </div>` : ""}
+      <span class="ai-meta">${analysis.wordCount} palabras analizadas · ${new Date(analysis.timestamp).toLocaleString("es-CL")}</span>
+    </div>
+  `;
 }
 
 function allControlsAnswered() {
