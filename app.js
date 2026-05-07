@@ -967,7 +967,7 @@ function renderFindings(findings) {
   }
   return `
     <div class="findings">
-      ${findings.slice(0, 10).map(item => `
+      ${findings.map(item => `
         <article class="finding-card">
           <span class="tag ${item.severity}">${item.priority}</span>
           <strong>${item.id} · ${item.title}</strong>
