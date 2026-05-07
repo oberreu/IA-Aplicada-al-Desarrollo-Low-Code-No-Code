@@ -805,7 +805,7 @@ textarea:focus {
 
 .control-fields {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 12px;
   align-items: end;
 }
@@ -836,6 +836,116 @@ textarea:focus {
   border-color: rgba(167, 139, 250, 0.5);
   color: var(--violet);
   background: rgba(167, 139, 250, 0.08);
+}
+
+/* Maturity select */
+.maturity-select {
+  width: 100%;
+}
+
+.maturity-select.mat-l0 {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: var(--red);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.maturity-select.mat-l1 {
+  border-color: rgba(251, 146, 60, 0.5);
+  color: #fb923c;
+  background: rgba(251, 146, 60, 0.08);
+}
+
+.maturity-select.mat-l2 {
+  border-color: rgba(245, 158, 11, 0.5);
+  color: var(--amber);
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.maturity-select.mat-l3 {
+  border-color: rgba(34, 197, 94, 0.5);
+  color: var(--green);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.maturity-select.mat-l4 {
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.08);
+}
+
+/* Maturity domain results */
+.maturity-domains {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 24px;
+}
+
+.mat-domain-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.mat-domain-row:last-of-type {
+  border-bottom: none;
+}
+
+.mat-domain-row strong {
+  min-width: 80px;
+  font-size: 13px;
+}
+
+.mat-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--surface-3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mat-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+.mat-val {
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 50px;
+  text-align: right;
+}
+
+.mat-count {
+  font-size: 11px;
+  color: var(--muted);
+  min-width: 40px;
+}
+
+.mat-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.mat-leg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.mat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
 .control-notes-row {

@@ -306,6 +306,17 @@ const answerScores = {
   NA: 0.75
 };
 
+const maturityLevels = [
+  { value: "", label: "Sin evaluar", description: "" },
+  { value: "L0", label: "L0 – Inexistente", description: "No hay proceso ni práctica definida para este control." },
+  { value: "L1", label: "L1 – Ad Hoc", description: "Prácticas informales, reactivas, dependientes de individuos. Sin documentación." },
+  { value: "L2", label: "L2 – Definido", description: "Procesos documentados y formalizados. Existe evidencia. Umbral de negligencia superado." },
+  { value: "L3", label: "L3 – Gestionado", description: "Procesos medidos, monitoreados con métricas y mejorados continuamente." },
+  { value: "L4", label: "L4 – Optimizado", description: "Prácticas proactivas, predictivas y adaptativas. Mejora continua automatizada." }
+];
+
+const maturityScores = { L0: 0, L1: 0.25, L2: 0.5, L3: 0.75, L4: 1 };
+
 let state = {
   setup: {
     orgName: "",
@@ -317,6 +328,7 @@ let state = {
   },
   answers: {},
   evidence: {},
+  maturity: {},
   updatedAt: null
 };
 
@@ -433,6 +445,8 @@ function renderControls() {
   controls.forEach(control => {
     const answerSelect = document.getElementById(`${control.id}-answer`);
     answerSelect.addEventListener("change", () => setAnswer(control.id, answerSelect.value));
+    const matSelect = document.getElementById(`${control.id}-maturity`);
+    matSelect.addEventListener("change", () => setMaturity(control.id, matSelect.value));
     ["type", "status", "notes"].forEach(field => {
       const el = document.getElementById(`${control.id}-${field}`);
       el.addEventListener("input", () => setEvidence(control.id, field, el.value));
@@ -449,6 +463,7 @@ function renderControls() {
 
 function renderControl(control) {
   const answer = state.answers[control.id] || "";
+  const mat = state.maturity[control.id] || "";
   const evidence = state.evidence[control.id] || {};
   const files = evidence.files || [];
   return `
@@ -467,6 +482,12 @@ function renderControl(control) {
             <option value="PARTIAL" ${selected(answer, "PARTIAL")}>Parcial</option>
             <option value="NO" ${selected(answer, "NO")}>No</option>
             <option value="NA" ${selected(answer, "NA")}>N/A</option>
+          </select>
+        </label>
+        <label>
+          Madurez (SCF)
+          <select id="${control.id}-maturity" class="maturity-select ${maturityClass(mat)}">
+            ${maturityLevels.map(ml => `<option value="${ml.value}" ${selected(mat, ml.value)}>${ml.label}</option>`).join("")}
           </select>
         </label>
         <label>
@@ -515,6 +536,11 @@ function answerClass(value) {
   return map[value] || "";
 }
 
+function maturityClass(value) {
+  const map = { L0: "mat-l0", L1: "mat-l1", L2: "mat-l2", L3: "mat-l3", L4: "mat-l4" };
+  return map[value] || "";
+}
+
 function selected(current, expected) {
   return current === expected ? "selected" : "";
 }
@@ -524,6 +550,13 @@ function setAnswer(controlId, value) {
   persist();
   renderControls();
   updateProgress();
+  renderResults();
+}
+
+function setMaturity(controlId, value) {
+  state.maturity[controlId] = value;
+  persist();
+  renderControls();
   renderResults();
 }
 
@@ -633,15 +666,23 @@ function renderResults() {
         </div>
       </div>
       <div class="cs-section cs-yellow">
-        <h4>Compliance</h4>
+        <h4>Compliance & Maturity</h4>
         <div class="cs-row">
           <div class="cs-cell">
             <span class="cs-label">Compliance Level %</span>
             <span class="cs-value cs-val-big">${summary.complianceLevel}%</span>
           </div>
           <div class="cs-cell">
-            <span class="cs-label">Maturity Level</span>
-            <span class="cs-value cs-val-big">${summary.maturity}</span>
+            <span class="cs-label">Maturity Level (SCF)</span>
+            <span class="cs-value cs-val-big">${summary.maturityLevelValue}</span>
+          </div>
+          <div class="cs-cell">
+            <span class="cs-label">Avg. Maturity Score</span>
+            <span class="cs-value cs-val-big">${summary.avgMaturityScore}/4.0</span>
+          </div>
+          <div class="cs-cell">
+            <span class="cs-label">Controles evaluados</span>
+            <span class="cs-value">${summary.maturityAssessedCount}/${controls.length}</span>
           </div>
         </div>
       </div>
@@ -671,6 +712,25 @@ function renderResults() {
           </div>
         `).join("")}
       </article>
+    </div>
+
+    <h3 class="section-title">Madurez por dominio (SCF C|P-CMM · L0–L4)</h3>
+    <div class="maturity-domains">
+      ${summary.domainMaturity.map(dm => `
+        <div class="mat-domain-row">
+          <strong>${shortDomain(dm.domain)}</strong>
+          <div class="mat-bar-track">
+            <div class="mat-bar-fill" style="width:${(dm.avg / 4) * 100}%;background:${matBarColor(dm.avg)}"></div>
+          </div>
+          <span class="mat-val">${dm.avg}/4.0</span>
+          <span class="mat-count">(${dm.assessed}/${dm.total})</span>
+        </div>
+      `).join("")}
+      <p class="mat-legend">
+        <span class="mat-leg-item"><span class="mat-dot" style="background:#ef4444"></span>L0–L1 Inexistente/Ad Hoc</span>
+        <span class="mat-leg-item"><span class="mat-dot" style="background:#f59e0b"></span>L2 Definido</span>
+        <span class="mat-leg-item"><span class="mat-dot" style="background:#22c55e"></span>L3–L4 Gestionado/Optimizado</span>
+      </p>
     </div>
 
     <h3 class="section-title">Brechas priorizadas</h3>
@@ -725,7 +785,27 @@ function buildSummary() {
   const applicableControls = controls.length - naCount;
   const complianceLevel = applicableControls > 0 ? Math.round((yesCount / applicableControls) * 100) : 0;
 
-  // Maturity level (1-5)
+  // Maturity model (SCF C|P-CMM adapted L0–L4)
+  const maturityAssessed = controls.filter(c => state.maturity[c.id] && state.maturity[c.id] !== "");
+  const avgMaturityScore = maturityAssessed.length > 0
+    ? maturityAssessed.reduce((sum, c) => sum + (maturityScores[state.maturity[c.id]] || 0), 0) / maturityAssessed.length
+    : 0;
+  let maturityLevelValue = "L0";
+  if (avgMaturityScore >= 0.875) maturityLevelValue = "L4";
+  else if (avgMaturityScore >= 0.625) maturityLevelValue = "L3";
+  else if (avgMaturityScore >= 0.375) maturityLevelValue = "L2";
+  else if (avgMaturityScore >= 0.125) maturityLevelValue = "L1";
+
+  const domainMaturity = domains.map(domain => {
+    const domControls = controls.filter(c => c.domain === domain);
+    const assessed = domControls.filter(c => state.maturity[c.id] && state.maturity[c.id] !== "");
+    const avg = assessed.length > 0
+      ? assessed.reduce((sum, c) => sum + (maturityScores[state.maturity[c.id]] || 0), 0) / assessed.length
+      : 0;
+    return { domain, avg: Math.round(avg * 4 * 10) / 10, assessed: assessed.length, total: domControls.length };
+  });
+
+  // Legacy maturity (1-5 from compliance %)
   let maturity = 1;
   if (complianceLevel >= 90) maturity = 5;
   else if (complianceLevel >= 75) maturity = 4;
@@ -751,6 +831,10 @@ function buildSummary() {
     ncTotal,
     complianceLevel,
     maturity,
+    maturityLevelValue,
+    avgMaturityScore: Math.round(avgMaturityScore * 4 * 10) / 10,
+    maturityAssessedCount: maturityAssessed.length,
+    domainMaturity,
     certStatus
   };
 }
@@ -911,6 +995,7 @@ function resetAssessment() {
   if (!confirmed) return;
   state.answers = {};
   state.evidence = {};
+  state.maturity = {};
   persist();
   renderControls();
   updateProgress();
@@ -926,6 +1011,7 @@ function loadState() {
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (stored && stored.setup && stored.answers && stored.evidence) {
+      stored.maturity = stored.maturity || {};
       state = stored;
     }
   } catch {
@@ -962,6 +1048,12 @@ function scoreColor(score) {
   if (score >= 60) return "var(--amber)";
   if (score >= 40) return "var(--violet)";
   return "var(--red)";
+}
+
+function matBarColor(avg) {
+  if (avg >= 3) return "#22c55e";
+  if (avg >= 2) return "#f59e0b";
+  return "#ef4444";
 }
 
 function severityRank(severity) {
