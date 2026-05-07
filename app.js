@@ -489,9 +489,11 @@ function bindEvents() {
     saveSetupFromForm({ silent: true });
     renderResults();
     showPanel("resultsPanel");
+    sendCompletionNotification();
   });
 
   document.getElementById("exportBtn").addEventListener("click", exportResults);
+  document.getElementById("exportPdfBtn").addEventListener("click", exportPdf);
   document.getElementById("deleteAllFilesBtn").addEventListener("click", deleteAllFiles);
   document.getElementById("startFromHomeBtn").addEventListener("click", () => showPanel("setupPanel"));
   document.getElementById("resetBtn").addEventListener("click", resetAssessment);
@@ -1140,6 +1142,11 @@ function renderResults() {
       </p>
     </div>
 
+    <h3 class="section-title">Radar de madurez por dominio</h3>
+    <div class="radar-container">
+      <canvas id="radarChart" width="400" height="400"></canvas>
+    </div>
+
     <h3 class="section-title">Brechas priorizadas</h3>
     ${renderFindings(summary.findings)}
 
@@ -1154,9 +1161,57 @@ function renderResults() {
       `).join("")}
     </div>
   `;
+
+  // Render radar chart after DOM update
+  renderRadarChart(summary);
 }
 
-function renderFindings(findings) {
+function renderRadarChart(summary) {
+  const canvas = document.getElementById("radarChart");
+  if (!canvas) return;
+
+  // Destroy previous chart instance if exists
+  if (window._radarChartInstance) {
+    window._radarChartInstance.destroy();
+  }
+
+  const labels = summary.domainMaturity.map(dm => shortDomain(dm.domain));
+  const data = summary.domainMaturity.map(dm => dm.avg);
+
+  window._radarChartInstance = new Chart(canvas, {
+    type: "radar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Madurez (0–4)",
+        data,
+        backgroundColor: "rgba(249, 115, 22, 0.15)",
+        borderColor: "rgba(249, 115, 22, 0.8)",
+        borderWidth: 2,
+        pointBackgroundColor: "#f97316",
+        pointBorderColor: "#fff",
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 4,
+          ticks: { stepSize: 1, color: "#94a3b8", backdropColor: "transparent" },
+          grid: { color: "rgba(45, 55, 72, 0.6)" },
+          angleLines: { color: "rgba(45, 55, 72, 0.6)" },
+          pointLabels: { color: "#f8fafc", font: { size: 12, weight: "bold" } }
+        }
+      },
+      plugins: {
+        legend: { labels: { color: "#94a3b8" } }
+      }
+    }
+  });
+}
   if (!findings.length) {
     return `<div class="empty-state">No hay brechas críticas registradas. Revisa controles marcados como N/A o evidencia pendiente antes de cerrar el assessment.</div>`;
   }
@@ -1353,6 +1408,66 @@ function exportResults() {
   link.download = `aicm-evaluator-${slugify(state.setup.orgName || "organizacion")}.json`;
   link.click();
   URL.revokeObjectURL(link.href);
+}
+
+function exportPdf() {
+  const container = document.getElementById("resultsContainer");
+  if (!container) return;
+
+  const opt = {
+    margin: [10, 10, 10, 10],
+    filename: `aicm-reporte-${slugify(state.setup.orgName || "organizacion")}.pdf`,
+    image: { type: "jpeg", quality: 0.95 },
+    html2canvas: { scale: 2, backgroundColor: "#0b0f14", useCORS: true },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+
+  html2pdf().set(opt).from(container).save();
+}
+
+// --- Simulated email notification ---
+function sendCompletionNotification() {
+  const email = currentUser ? currentUser.email : (state.setup.owner || "usuario");
+  const summary = buildSummary();
+
+  const notification = {
+    to: email,
+    subject: `[CSA AICM] Assessment completado - ${state.setup.orgName || "Organización"}`,
+    body: `Estimado/a ${state.setup.owner || "Responsable"},\n\nSe ha completado el assessment AICM para ${state.setup.orgName || "su organización"}.\n\nResultados:\n- Compliance: ${summary.complianceLevel}%\n- Madurez SCF: ${summary.maturityLevelValue} (${summary.maturityLevelLabel})\n- Brechas detectadas: ${summary.findings.length}\n- Controles evaluados: ${summary.answered}/${controls.length}\n\nAcceda al dashboard para revisar el detalle completo.\n\nSaludos,\nCSA LATAM AICM Evaluator`,
+    timestamp: new Date().toISOString(),
+    status: "enviado (simulado)"
+  };
+
+  // Show notification in UI
+  showNotificationBanner(notification);
+
+  // Save to Firestore if logged in
+  if (currentUser) {
+    db.collection("notifications").add({
+      ...notification,
+      uid: currentUser.uid
+    }).catch(err => console.warn("Notification save error:", err));
+  }
+}
+
+function showNotificationBanner(notification) {
+  // Remove previous notification banner if exists
+  const existing = document.querySelector(".notification-banner");
+  if (existing) existing.remove();
+
+  const banner = document.createElement("div");
+  banner.className = "notification-banner";
+  banner.innerHTML = `
+    <div class="notif-icon">📧</div>
+    <div class="notif-content">
+      <strong>Notificación enviada (simulado)</strong>
+      <p>Para: ${notification.to}</p>
+      <p>Asunto: ${notification.subject}</p>
+    </div>
+    <button class="notif-close" onclick="this.parentElement.remove()">×</button>
+  `;
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 8000);
 }
 
 function loadSampleData() {
