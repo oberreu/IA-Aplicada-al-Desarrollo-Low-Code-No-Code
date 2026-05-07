@@ -1,3 +1,20 @@
+// --- Firebase Configuration ---
+const firebaseConfig = {
+  apiKey: "AIzaSyBCoDivUd2pux4b6Deqz0DjbgtsZT4NjbM",
+  authDomain: "ia-aplicada-al-desarrollo.firebaseapp.com",
+  projectId: "ia-aplicada-al-desarrollo",
+  storageBucket: "ia-aplicada-al-desarrollo.firebasestorage.app",
+  messagingSenderId: "871287119450",
+  appId: "1:871287119450:web:4824f9ff2cdc4ce8880263"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+let currentUser = null;
+
 const STORAGE_KEY = "csaLatamAicmModulo4State";
 
 const controls = [
@@ -270,6 +287,7 @@ let state = {
 const panels = ["homePanel", "setupPanel", "assessmentPanel", "resultsPanel"];
 
 document.addEventListener("DOMContentLoaded", () => {
+  initAuth();
   loadState();
   bindEvents();
   renderSetup();
@@ -277,6 +295,112 @@ document.addEventListener("DOMContentLoaded", () => {
   updateProgress();
   renderResults();
 });
+
+// --- Auth Logic ---
+function initAuth() {
+  auth.onAuthStateChanged(user => {
+    currentUser = user;
+    updateAuthUI();
+    if (user) {
+      loadState().then(() => {
+        renderSetup();
+        renderControls();
+        updateProgress();
+        renderResults();
+      });
+    }
+  });
+
+  const authForm = document.getElementById("authForm");
+  const authRegisterBtn = document.getElementById("authRegisterBtn");
+  const authLogoutBtn = document.getElementById("authLogoutBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  authForm.addEventListener("submit", e => {
+    e.preventDefault();
+    authLogin();
+  });
+
+  authRegisterBtn.addEventListener("click", () => authRegister());
+  authLogoutBtn.addEventListener("click", () => authLogout());
+  logoutBtn.addEventListener("click", () => authLogout());
+}
+
+async function authLogin() {
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const errorEl = document.getElementById("authError");
+  errorEl.textContent = "";
+
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (err) {
+    errorEl.textContent = authErrorMessage(err.code);
+  }
+}
+
+async function authRegister() {
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const errorEl = document.getElementById("authError");
+  errorEl.textContent = "";
+
+  if (password.length < 6) {
+    errorEl.textContent = "La contraseña debe tener al menos 6 caracteres.";
+    return;
+  }
+
+  try {
+    await auth.createUserWithEmailAndPassword(email, password);
+  } catch (err) {
+    errorEl.textContent = authErrorMessage(err.code);
+  }
+}
+
+function authLogout() {
+  auth.signOut();
+  currentUser = null;
+  updateAuthUI();
+}
+
+function updateAuthUI() {
+  const authSection = document.getElementById("authSection");
+  const authForm = document.getElementById("authForm");
+  const authLogged = document.getElementById("authLogged");
+  const authLoggedEmail = document.getElementById("authLoggedEmail");
+  const userBar = document.getElementById("userBar");
+  const userEmail = document.getElementById("userEmail");
+
+  if (currentUser) {
+    authForm.style.display = "none";
+    authSection.querySelector(".auth-subtitle").style.display = "none";
+    authSection.querySelector(".auth-note").style.display = "none";
+    authLogged.style.display = "flex";
+    authLoggedEmail.textContent = currentUser.email;
+    userBar.style.display = "flex";
+    userEmail.textContent = currentUser.email;
+  } else {
+    authForm.style.display = "";
+    authSection.querySelector(".auth-subtitle").style.display = "";
+    authSection.querySelector(".auth-note").style.display = "";
+    authLogged.style.display = "none";
+    userBar.style.display = "none";
+    userEmail.textContent = "";
+  }
+}
+
+function authErrorMessage(code) {
+  const messages = {
+    "auth/user-not-found": "No existe una cuenta con ese email.",
+    "auth/wrong-password": "Contraseña incorrecta.",
+    "auth/invalid-credential": "Credenciales inválidas. Verifica email y contraseña.",
+    "auth/email-already-in-use": "Ya existe una cuenta con ese email.",
+    "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+    "auth/invalid-email": "El formato del email no es válido.",
+    "auth/too-many-requests": "Demasiados intentos. Intenta de nuevo más tarde."
+  };
+  return messages[code] || "Error de autenticación. Intenta de nuevo.";
+}
 
 function bindEvents() {
   document.querySelectorAll(".nav-item").forEach(button => {
@@ -549,31 +673,61 @@ function setEvidence(controlId, field, value) {
   renderResults();
 }
 
+const MAX_FILE_SIZE = 500 * 1024; // 500KB
+const ALLOWED_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/webp", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+
 function handleFileUpload(controlId, input) {
   const files = Array.from(input.files);
   if (!files.length) return;
+
+  // Validate
+  for (const file of files) {
+    if (file.size > MAX_FILE_SIZE) {
+      alert(`El archivo "${file.name}" excede 500KB. Comprime o selecciona otro.`);
+      input.value = "";
+      return;
+    }
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      alert(`Tipo no permitido: "${file.name}". Solo PDF, PNG, JPG, WEBP, DOCX.`);
+      input.value = "";
+      return;
+    }
+  }
+
   state.evidence[controlId] ||= {};
   state.evidence[controlId].files ||= [];
 
-  const promises = files.map(file => {
-    return new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve({ name: file.name, size: file.size, type: file.type, data: reader.result });
-      };
-      reader.readAsDataURL(file);
-    });
+  if (!currentUser) return;
+
+  const uploadPromises = files.map(file => {
+    const path = `evidence/${currentUser.uid}/${controlId}/${Date.now()}_${file.name}`;
+    const ref = storage.ref(path);
+    return ref.put(file).then(snapshot => snapshot.ref.getDownloadURL()).then(url => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      url,
+      path
+    }));
   });
 
-  Promise.all(promises).then(results => {
+  Promise.all(uploadPromises).then(results => {
     state.evidence[controlId].files.push(...results);
     persist();
     renderControls();
+  }).catch(err => {
+    console.error("Upload error:", err);
+    alert("Error al subir archivo. Verifica tu conexión.");
   });
 }
 
 function removeFile(controlId, index) {
   if (!state.evidence[controlId] || !state.evidence[controlId].files) return;
+  const file = state.evidence[controlId].files[index];
+  // Delete from Firebase Storage if has path
+  if (file.path && currentUser) {
+    storage.ref(file.path).delete().catch(err => console.warn("Delete error:", err));
+  }
   state.evidence[controlId].files.splice(index, 1);
   persist();
   renderControls();
@@ -989,10 +1143,38 @@ function resetAssessment() {
 
 function persist() {
   state.updatedAt = new Date().toISOString();
+  // Save to localStorage as fallback
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  // Save to Firestore
+  if (currentUser) {
+    const docRef = db.collection("assessments").doc(currentUser.uid);
+    docRef.set({
+      ...state,
+      ownerId: currentUser.uid,
+      email: currentUser.email
+    }).catch(err => console.warn("Firestore save error:", err));
+  }
 }
 
-function loadState() {
+async function loadState() {
+  // Try Firestore first
+  if (currentUser) {
+    try {
+      const doc = await db.collection("assessments").doc(currentUser.uid).get();
+      if (doc.exists) {
+        const stored = doc.data();
+        if (stored && stored.setup && stored.answers && stored.evidence) {
+          stored.maturity = stored.maturity || {};
+          state = stored;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("Firestore load error:", err);
+    }
+  }
+  // Fallback to localStorage
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (stored && stored.setup && stored.answers && stored.evidence) {
