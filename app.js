@@ -673,7 +673,7 @@ function setEvidence(controlId, field, value) {
   renderResults();
 }
 
-const MAX_FILE_SIZE = 500 * 1024; // 500KB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/webp", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
 
 function handleFileUpload(controlId, input) {
@@ -683,7 +683,7 @@ function handleFileUpload(controlId, input) {
   // Validate
   for (const file of files) {
     if (file.size > MAX_FILE_SIZE) {
-      alert(`El archivo "${file.name}" excede 500KB. Comprime o selecciona otro.`);
+      alert(`El archivo "${file.name}" excede 5MB. Comprime o selecciona otro.`);
       input.value = "";
       return;
     }
