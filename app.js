@@ -324,6 +324,11 @@ function initAuth() {
   authRegisterBtn.addEventListener("click", () => authRegister());
   authLogoutBtn.addEventListener("click", () => authLogout());
   logoutBtn.addEventListener("click", () => authLogout());
+
+  document.getElementById("authForgotBtn").addEventListener("click", e => {
+    e.preventDefault();
+    authForgotPassword();
+  });
 }
 
 async function authLogin() {
@@ -352,6 +357,26 @@ async function authRegister() {
 
   try {
     await auth.createUserWithEmailAndPassword(email, password);
+  } catch (err) {
+    errorEl.textContent = authErrorMessage(err.code);
+  }
+}
+
+async function authForgotPassword() {
+  const email = document.getElementById("authEmail").value.trim();
+  const errorEl = document.getElementById("authError");
+  errorEl.textContent = "";
+
+  if (!email) {
+    errorEl.textContent = "Ingresa tu email para recuperar la contraseña.";
+    return;
+  }
+
+  try {
+    await auth.sendPasswordResetEmail(email);
+    errorEl.style.color = "var(--green)";
+    errorEl.textContent = "✓ Se envió un enlace de recuperación a " + email;
+    setTimeout(() => { errorEl.style.color = ""; }, 5000);
   } catch (err) {
     errorEl.textContent = authErrorMessage(err.code);
   }
