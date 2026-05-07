@@ -30,6 +30,11 @@ if (firebaseAvailable) {
   console.warn("Firebase SDK no disponible. La app funcionará solo con localStorage.");
 }
 
+// EmailJS initialization
+if (typeof emailjs !== "undefined") {
+  emailjs.init("ZEsxS-GfRd7PNFmmF");
+}
+
 let currentUser = null;
 
 const STORAGE_KEY = "csaLatamAicmModulo4State";
@@ -1454,27 +1459,51 @@ function sendCompletionNotification() {
     return;
   }
 
-  const recipient = currentUser ? currentUser.email : (state.setup.owner || "responsable del assessment");
+  const recipient = currentUser ? currentUser.email : prompt("Ingresa el email donde enviar el resumen:");
+  if (!recipient) return;
+
   const summary = buildSummary();
 
-  const notification = {
-    to: recipient,
+  const templateParams = {
+    to_email: recipient,
     subject: `[CSA AICM] Assessment completado - ${state.setup.orgName || "Organización"}`,
-    body: `Estimado/a ${state.setup.owner || "Responsable"},\n\nSe ha completado el assessment AICM para ${state.setup.orgName || "su organización"}.\n\nResultados:\n- Compliance: ${summary.complianceLevel}%\n- Madurez SCF: ${summary.maturityLevelValue} (${summary.maturityLevelLabel})\n- Brechas detectadas: ${summary.findings.length}\n- Controles evaluados: ${summary.answered}/${controls.length}\n\nAcceda al dashboard para revisar el detalle completo.\n\nSaludos,\nEvaluación de Controles de Seguridad Cloud para Inteligencia Artificial`,
-    timestamp: new Date().toISOString(),
-    status: "enviado (simulado)"
+    owner: state.setup.owner || "Responsable",
+    org_name: state.setup.orgName || "Organización",
+    compliance: summary.complianceLevel,
+    maturity_level: summary.maturityLevelValue,
+    maturity_label: summary.maturityLevelLabel,
+    maturity_score: summary.avgMaturityScore,
+    findings_count: summary.findings.length,
+    answered: summary.answered,
+    total: controls.length,
+    sector: state.setup.sector || "No definido",
+    country: state.setup.country || "No definido",
+    provider: state.setup.provider || "No definido",
+    role: state.setup.role || "No definido",
+    timestamp: new Date().toLocaleString("es-CL")
   };
 
-  // Show notification in UI
-  showNotificationBanner(notification);
+  // Show sending state
+  showNotificationBanner({ to: recipient, subject: templateParams.subject, status: "enviando..." });
 
-  // Save to Firestore if logged in
-  if (currentUser) {
-    db.collection("notifications").add({
-      ...notification,
-      uid: currentUser.uid
-    }).catch(err => console.warn("Notification save error:", err));
-  }
+  emailjs.send("service_IAAplicadaALDev", "template_bewfo6a", templateParams)
+    .then(() => {
+      showNotificationBanner({ to: recipient, subject: templateParams.subject, status: "enviado" });
+      // Save to Firestore if logged in
+      if (currentUser) {
+        db.collection("notifications").add({
+          to: recipient,
+          subject: templateParams.subject,
+          timestamp: new Date().toISOString(),
+          status: "enviado",
+          uid: currentUser.uid
+        }).catch(err => console.warn("Notification save error:", err));
+      }
+    })
+    .catch(err => {
+      console.error("EmailJS error:", err);
+      showNotificationBanner({ to: recipient, subject: templateParams.subject, status: "error al enviar" });
+    });
 }
 
 function showNotificationBanner(notification) {
@@ -1482,12 +1511,13 @@ function showNotificationBanner(notification) {
   const existing = document.querySelector(".notification-banner");
   if (existing) existing.remove();
 
+  const statusClass = notification.status === "enviado" ? "notif-success" : notification.status === "error al enviar" ? "notif-error" : "";
   const banner = document.createElement("div");
-  banner.className = "notification-banner";
+  banner.className = `notification-banner ${statusClass}`;
   banner.innerHTML = `
-    <div class="notif-icon">Email</div>
+    <div class="notif-icon">✉️</div>
     <div class="notif-content">
-      <strong>Notificación enviada (simulado)</strong>
+      <strong>Notificación — ${escapeHtml(notification.status)}</strong>
       <p>Para: ${escapeHtml(notification.to)}</p>
       <p>Asunto: ${escapeHtml(notification.subject)}</p>
     </div>
@@ -1495,7 +1525,7 @@ function showNotificationBanner(notification) {
   `;
   document.body.appendChild(banner);
   banner.querySelector(".notif-close").addEventListener("click", () => banner.remove());
-  setTimeout(() => banner.remove(), 8000);
+  if (notification.status !== "enviando...") setTimeout(() => banner.remove(), 8000);
 }
 
 function updateAuthUnavailableUI() {
