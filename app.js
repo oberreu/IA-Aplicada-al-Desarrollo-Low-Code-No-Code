@@ -440,6 +440,11 @@ function bindEvents() {
 
   document.getElementById("viewResultsBtn").addEventListener("click", () => {
     if (!allControlsAnswered()) return;
+    const missing = controlsMissingEvidence();
+    if (missing.length) {
+      alert(`Los siguientes controles tienen tipo de evidencia seleccionado pero no tienen archivo adjunto:\n\n${missing.join(", ")}\n\nAdjunta un archivo .txt o cambia el tipo a "Sin clasificar".`);
+      return;
+    }
     saveSetupFromForm({ silent: true });
     renderResults();
     showPanel("resultsPanel");
@@ -792,6 +797,17 @@ function downloadSampleFile(controlId) {
 
 function allControlsAnswered() {
   return controls.every(c => state.answers[c.id] && state.answers[c.id] !== "");
+}
+
+function controlsMissingEvidence() {
+  return controls
+    .filter(c => {
+      const ev = state.evidence[c.id] || {};
+      const hasType = ev.type && ev.type !== "";
+      const hasFiles = ev.files && ev.files.length > 0;
+      return hasType && !hasFiles;
+    })
+    .map(c => c.id);
 }
 
 function updateResultsAccess() {
