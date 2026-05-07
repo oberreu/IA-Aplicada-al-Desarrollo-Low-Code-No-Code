@@ -430,9 +430,8 @@ function renderControls() {
   document.getElementById("controlsContainer").innerHTML = html;
 
   controls.forEach(control => {
-    document.querySelectorAll(`[data-answer="${control.id}"]`).forEach(button => {
-      button.addEventListener("click", () => setAnswer(control.id, button.dataset.value));
-    });
+    const answerSelect = document.getElementById(`${control.id}-answer`);
+    answerSelect.addEventListener("change", () => setAnswer(control.id, answerSelect.value));
     ["type", "status", "notes"].forEach(field => {
       const el = document.getElementById(`${control.id}-${field}`);
       el.addEventListener("input", () => setEvidence(control.id, field, el.value));
@@ -461,12 +460,13 @@ function renderControl(control) {
       <div class="control-fields">
         <label>
           Cumplimiento
-          <div class="answer-row" aria-label="Respuesta ${control.id}">
-            ${answerButton(control.id, "YES", "Sí", "yes", answer)}
-            ${answerButton(control.id, "PARTIAL", "Parcial", "partial", answer)}
-            ${answerButton(control.id, "NO", "No", "no", answer)}
-            ${answerButton(control.id, "NA", "N/A", "na", answer)}
-          </div>
+          <select id="${control.id}-answer" class="answer-select ${answerClass(answer)}">
+            <option value="">Sin evaluar</option>
+            <option value="YES" ${selected(answer, "YES")}>Sí</option>
+            <option value="PARTIAL" ${selected(answer, "PARTIAL")}>Parcial</option>
+            <option value="NO" ${selected(answer, "NO")}>No</option>
+            <option value="NA" ${selected(answer, "NA")}>N/A</option>
+          </select>
         </label>
         <label>
           Tipo evidencia
@@ -509,9 +509,9 @@ function renderControl(control) {
   `;
 }
 
-function answerButton(controlId, value, label, className, selectedValue) {
-  const active = selectedValue === value ? "selected" : "";
-  return `<button class="answer-button ${className} ${active}" data-answer="${controlId}" data-value="${value}" type="button">${label}</button>`;
+function answerClass(value) {
+  const map = { YES: "answer-yes", PARTIAL: "answer-partial", NO: "answer-no", NA: "answer-na" };
+  return map[value] || "";
 }
 
 function selected(current, expected) {

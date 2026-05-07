@@ -744,45 +744,37 @@ textarea:focus {
 
 .control-fields {
   display: grid;
-  grid-template-columns: auto 180px 180px;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 12px;
   align-items: end;
 }
 
-.answer-row {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  align-items: center;
+.answer-select {
+  width: 100%;
 }
 
-.answer-button {
-  font-size: 12px;
-  padding: 7px 10px;
-}
-
-.answer-button.selected.yes {
-  background: rgba(34, 197, 94, 0.13);
-  border-color: rgba(34, 197, 94, 0.45);
+.answer-select.answer-yes {
+  border-color: rgba(34, 197, 94, 0.5);
   color: var(--green);
+  background: rgba(34, 197, 94, 0.08);
 }
 
-.answer-button.selected.partial {
-  background: rgba(245, 158, 11, 0.14);
-  border-color: rgba(245, 158, 11, 0.45);
+.answer-select.answer-partial {
+  border-color: rgba(245, 158, 11, 0.5);
   color: var(--amber);
+  background: rgba(245, 158, 11, 0.08);
 }
 
-.answer-button.selected.no {
-  background: rgba(239, 68, 68, 0.14);
-  border-color: rgba(239, 68, 68, 0.45);
+.answer-select.answer-no {
+  border-color: rgba(239, 68, 68, 0.5);
   color: var(--red);
+  background: rgba(239, 68, 68, 0.08);
 }
 
-.answer-button.selected.na {
-  background: rgba(167, 139, 250, 0.14);
-  border-color: rgba(167, 139, 250, 0.45);
+.answer-select.answer-na {
+  border-color: rgba(167, 139, 250, 0.5);
   color: var(--violet);
+  background: rgba(167, 139, 250, 0.08);
 }
 
 .control-notes-row {
