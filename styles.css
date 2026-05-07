@@ -276,6 +276,22 @@ body.on-landing .topbar {
   padding: 14px 36px;
 }
 
+.landing-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.landing-actions .ghost-button {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 14px 36px;
+}
+
 .landing-note {
   font-size: 13px;
   color: var(--muted);
