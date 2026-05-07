@@ -888,20 +888,14 @@ function loadSampleData() {
 }
 
 function resetAssessment() {
-  const confirmed = window.confirm("¿Reiniciar evaluación y borrar el progreso local?");
+  const confirmed = window.confirm("¿Reiniciar evaluación? Todos los controles volverán a Sin evaluar, Sin clasificar y No registrada.");
   if (!confirmed) return;
-  localStorage.removeItem(STORAGE_KEY);
-  state = {
-    setup: { orgName: "", sector: "", country: "", owner: "", provider: "Azure", role: "AI Client" },
-    answers: {},
-    evidence: {},
-    updatedAt: null
-  };
-  renderSetup();
+  state.answers = {};
+  state.evidence = {};
+  persist();
   renderControls();
   updateProgress();
   renderResults();
-  showPanel("setupPanel");
 }
 
 function persist() {
