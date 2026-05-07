@@ -14,6 +14,13 @@ const controls = [
       "Verificar que las políticas requieren revisión de evidencia de cumplimiento de proveedores antes de integrar servicios de IA.",
       "Confirmar que las actualizaciones incluyen responsabilidades de monitoreo de cumplimiento de proveedores."
     ],
+    implementationSteps: [
+      "Designar un sponsor ejecutivo del programa de gobierno de IA con autoridad presupuestaria.",
+      "Redactar política de uso responsable de IA alineada con ISO 42001 / NIST AI RMF.",
+      "Definir matriz RACI con roles: CISO, CDO, Legal, Compliance y líneas de negocio.",
+      "Establecer ciclo de revisión anual con checklist de aprobación y control de versiones.",
+      "Comunicar la política a toda la organización y registrar evidencia de difusión."
+    ],
     weight: 1
   },
   {
@@ -27,6 +34,13 @@ const controls = [
       "Confirmar que incluye procedimientos para identificar, evaluar, asignar ownership, tratar y aceptar riesgos de servicios de IA de terceros.",
       "Verificar que considera riesgos como mal uso del modelo, falta de explicabilidad, residencia de datos y dependencia de modelos opacos.",
       "Evaluar si el programa AIRM se alinea con el framework de gobierno de IA y la estrategia de riesgo empresarial."
+    ],
+    implementationSteps: [
+      "Crear un registro de riesgos de IA con taxonomía específica (bias, hallucination, data leakage, model drift).",
+      "Definir criterios de aceptación de riesgo aprobados por la dirección con umbrales cuantitativos.",
+      "Asignar un risk owner por cada riesgo identificado con responsabilidad de tratamiento.",
+      "Integrar el AIRM con el framework de riesgo empresarial existente (ERM).",
+      "Implementar revisión trimestral del registro con evidencia de acciones de tratamiento."
     ],
     weight: 1.2
   },
@@ -44,6 +58,13 @@ const controls = [
       "Confirmar que los hallazgos del Red Team se traducen en mejoras continuas de los controles de validación.",
       "Verificar que se monitorea la efectividad de la validación con métricas relevantes actualizadas regularmente."
     ],
+    implementationSteps: [
+      "Implementar guardrails de input (Azure AI Content Safety, AWS Guardrails o equivalente).",
+      "Configurar filtros específicos contra prompt injection, jailbreak y token manipulation.",
+      "Definir reglas de validación de longitud, formato y contenido por caso de uso.",
+      "Ejecutar ejercicios de AI Red Teaming trimestrales con escenarios adversariales documentados.",
+      "Establecer métricas de efectividad (tasa de bloqueo, falsos positivos) con dashboards operativos."
+    ],
     weight: 1.1
   },
   {
@@ -59,6 +80,13 @@ const controls = [
       "Verificar el uso efectivo de delimitadores para separar partes del prompt.",
       "Analizar la resistencia del modelo a intentos de override de instrucciones de sistema desde el input de usuario.",
       "Revisar diferenciación visual en la UI entre áreas de input y guía del sistema."
+    ],
+    implementationSteps: [
+      "Diseñar arquitectura de prompts con separación explícita: system message, user input, context data.",
+      "Implementar delimitadores estructurados (XML tags, markers) entre secciones del prompt.",
+      "Configurar el modelo para rechazar instrucciones que intenten sobrescribir el system prompt.",
+      "Ejecutar pruebas de indirect prompt injection con payloads en documentos y datos de contexto.",
+      "Documentar la arquitectura de prompts y mantener versionamiento de system prompts en producción."
     ],
     weight: 1.1
   },
@@ -77,6 +105,13 @@ const controls = [
       "Verificar si la organización ha documentado incidentes de exposición de datos por herramientas GenAI y las acciones de seguimiento.",
       "Verificar que la gestión de riesgos de IA incluye evaluaciones de bias, explicabilidad y privacidad antes del deployment."
     ],
+    implementationSteps: [
+      "Implementar clasificación automática de datos (PII, PHI, financieros) antes de enviar a modelos de IA.",
+      "Configurar DLP para bloquear envío de datos sensibles a servicios de IA no aprobados.",
+      "Aplicar técnicas de anonimización/pseudonimización para datos usados en fine-tuning o RAG.",
+      "Definir política de retención y eliminación de datos procesados por proveedores de IA.",
+      "Realizar evaluaciones de privacidad (DPIA) antes de cada nuevo despliegue de IA con datos personales."
+    ],
     weight: 1.2
   },
   {
@@ -92,6 +127,13 @@ const controls = [
       "Verificar que los controles de acceso previenen modificación o inserción no autorizada de datos usados en IA.",
       "Verificar que el plan de respuesta a incidentes cubre amenazas de data poisoning con detección, reporte y remediación.",
       "Verificar que los empleados están capacitados para reconocer potenciales amenazas de envenenamiento de datos."
+    ],
+    implementationSteps: [
+      "Implementar checksums y firmas digitales para validar integridad de datasets de entrenamiento.",
+      "Configurar controles de acceso estrictos (RBAC) para repositorios de datos de entrenamiento.",
+      "Desplegar monitoreo de anomalías estadísticas en distribución de datos de entrada.",
+      "Establecer pipeline de validación de calidad de datos con cuarentena automática de lotes sospechosos.",
+      "Incluir escenarios de data poisoning en el plan de respuesta a incidentes con playbooks específicos."
     ],
     weight: 1.1
   },
@@ -110,6 +152,13 @@ const controls = [
       "Verificar que las alertas basadas en políticas de logging están activamente monitoreadas y atendidas.",
       "Confirmar que las políticas son comunicadas, revisadas al menos anualmente y aprobadas por stakeholders relevantes."
     ],
+    implementationSteps: [
+      "Definir política de logging que cubra: prompts, respuestas, metadata de sesión y tokens consumidos.",
+      "Configurar retención de logs según regulación local (mínimo 12 meses para auditoría).",
+      "Integrar logs de IA con SIEM/SOC existente para correlación de eventos de seguridad.",
+      "Implementar alertas automáticas por patrones anómalos (volumen, contenido, horario).",
+      "Establecer procedimiento de revisión periódica de logs con responsable asignado."
+    ],
     weight: 1
   },
   // --- Model Security (MDS) ---
@@ -127,6 +176,13 @@ const controls = [
       "Revisar reportes de pruebas adversariales que cubran vectores de ataque relevantes con métodos reconocidos.",
       "Exigir logs de cambios de modelo transparentes que registren actualizaciones, cambios de datos/arquitectura y riesgos asociados."
     ],
+    implementationSteps: [
+      "Exigir al proveedor certificaciones actualizadas (SOC 2 Type II, ISO 27001) del entorno de entrenamiento.",
+      "Incluir cláusulas contractuales de seguridad del pipeline en SLAs con proveedores de modelos.",
+      "Solicitar y revisar reportes de auditoría del proveedor (AP, OSP, MP) al menos anualmente.",
+      "Validar que el proveedor mantiene changelog de modelo con registro de cambios de datos y arquitectura.",
+      "Realizar evaluación de riesgo de la cadena de suministro del modelo antes de cada actualización mayor."
+    ],
     weight: 1.1
   },
   {
@@ -142,6 +198,13 @@ const controls = [
       "Verificar la implementación de sistemas de monitoreo para detectar indicadores de ataque a nivel de aplicación.",
       "Revisar procedimientos de prueba de defensas contra amenazas priorizadas.",
       "Verificar procesos para actualizar evaluaciones de amenazas cuando cambian features o surgen nuevas técnicas de ataque."
+    ],
+    implementationSteps: [
+      "Realizar threat modeling específico para IA (STRIDE adaptado + OWASP Top 10 for LLMs).",
+      "Ejecutar AI Red Teaming con herramientas especializadas (PyRIT, Garak, o equivalentes).",
+      "Documentar vectores de ataque priorizados por impacto y probabilidad para cada modelo.",
+      "Implementar monitoreo de indicadores de ataque (patrones de input anómalos, alta tasa de bloqueo).",
+      "Establecer proceso de actualización de la evaluación de amenazas ante nuevas técnicas publicadas."
     ],
     weight: 1.1
   },
@@ -159,6 +222,13 @@ const controls = [
       "Examinar procedimientos de auditoría de cómo los empleados interactúan con herramientas de IA en la nube.",
       "Verificar que un proceso de revisión anual ha generado actualizaciones a las políticas de aseguramiento en los últimos 12 meses.",
       "Confirmar que existen procesos para monitorear, rastrear y cerrar hallazgos de auditoría con acciones correctivas documentadas."
+    ],
+    implementationSteps: [
+      "Definir plan anual de auditoría de IA con alcance, frecuencia y estándares de referencia (AICM, ISO 42001).",
+      "Mapear modelo de responsabilidad compartida con cada proveedor de IA (quién audita qué).",
+      "Establecer tracker de hallazgos con estados, owners y fechas de cierre comprometidas.",
+      "Programar revisión anual de la política de auditoría con aprobación formal del comité de gobierno.",
+      "Verificar residencia de datos de IA y cumplimiento jurisdiccional al menos semestralmente."
     ],
     weight: 1
   }
@@ -667,11 +737,16 @@ function renderFindings(findings) {
   }
   return `
     <div class="findings">
-      ${findings.slice(0, 6).map(item => `
+      ${findings.slice(0, 10).map(item => `
         <article class="finding-card">
           <span class="tag ${item.severity}">${item.priority}</span>
           <strong>${item.id} · ${item.title}</strong>
           <p>${item.recommendation}</p>
+          ${item.implementationSteps.length ? `
+          <details class="impl-steps">
+            <summary>Recomendaciones de implementación</summary>
+            <ol>${item.implementationSteps.map(s => `<li>${s}</li>`).join("")}</ol>
+          </details>` : ""}
         </article>
       `).join("")}
     </div>
@@ -782,7 +857,8 @@ function buildFindings() {
         title: control.title,
         priority: severity === "high" ? "Alta" : "Media",
         severity,
-        recommendation: recommendationFor(control, answer, ev)
+        recommendation: recommendationFor(control, answer, ev),
+        implementationSteps: control.implementationSteps || []
       };
     })
     .sort((a, b) => severityRank(a.severity) - severityRank(b.severity));
