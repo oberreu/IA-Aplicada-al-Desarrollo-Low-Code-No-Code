@@ -598,7 +598,8 @@ function renderControl(control) {
         </label>
         <label class="files-label">
           Archivos adjuntos
-          <input type="file" id="${control.id}-file" multiple class="file-input">
+          <input type="file" id="${control.id}-file" multiple accept=".txt" class="file-input">
+          <span class="file-note">Prototipo: solo archivos .txt (máx. 1 MB)</span>
           ${files.length ? `<ul class="file-list">${files.map((f, i) => `<li><span>${escapeHtml(f.name)}</span><button type="button" class="remove-file" data-control="${control.id}" data-index="${i}">×</button></li>`).join("")}</ul>` : ""}
         </label>
       </div>
@@ -698,8 +699,8 @@ function setEvidence(controlId, field, value) {
   renderResults();
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ALLOWED_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/webp", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
+const ALLOWED_TYPES = ["text/plain"];
 
 function handleFileUpload(controlId, input) {
   const files = Array.from(input.files);
@@ -708,12 +709,12 @@ function handleFileUpload(controlId, input) {
   // Validate
   for (const file of files) {
     if (file.size > MAX_FILE_SIZE) {
-      alert(`El archivo "${file.name}" excede 5MB. Comprime o selecciona otro.`);
+      alert(`El archivo "${file.name}" excede 1MB. Reduce su tamaño o selecciona otro.`);
       input.value = "";
       return;
     }
     if (!ALLOWED_TYPES.includes(file.type)) {
-      alert(`Tipo no permitido: "${file.name}". Solo PDF, PNG, JPG, WEBP, DOCX.`);
+      alert(`Tipo no permitido: "${file.name}". Solo archivos .txt para este prototipo.`);
       input.value = "";
       return;
     }

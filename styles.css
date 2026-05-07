@@ -1114,6 +1114,15 @@ textarea:focus {
   min-height: auto;
 }
 
+.file-note {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-top: 4px;
+  font-style: italic;
+}
+
 .hint {
   margin-top: 10px;
   color: var(--muted);
