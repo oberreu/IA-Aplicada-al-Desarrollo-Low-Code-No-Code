@@ -383,9 +383,50 @@ async function authForgotPassword() {
 }
 
 function authLogout() {
-  auth.signOut();
-  currentUser = null;
-  updateAuthUI();
+  if (!confirm("Al cerrar sesión se eliminarán todos los archivos subidos. ¿Continuar?")) return;
+  deleteAllStorageFiles().then(() => {
+    auth.signOut();
+    currentUser = null;
+    updateAuthUI();
+    showPanel("homePanel");
+  });
+}
+
+async function deleteAllStorageFiles() {
+  const deletions = [];
+  for (const control of controls) {
+    const ev = state.evidence[control.id];
+    if (!ev || !ev.files || !ev.files.length) continue;
+    for (const file of ev.files) {
+      if (file.path && currentUser) {
+        deletions.push(storage.ref(file.path).delete().catch(err => console.warn("Delete error:", err)));
+      }
+    }
+    ev.files = [];
+    delete ev.aiAnalysis;
+  }
+  await Promise.all(deletions);
+  persist();
+  renderControls();
+}
+
+function deleteAllFiles() {
+  const totalFiles = controls.reduce((sum, c) => {
+    const ev = state.evidence[c.id];
+    return sum + (ev && ev.files ? ev.files.length : 0);
+  }, 0);
+
+  if (totalFiles === 0) {
+    alert("No hay archivos adjuntos para eliminar.");
+    return;
+  }
+
+  if (!confirm(`¿Eliminar ${totalFiles} archivo(s) adjunto(s) de todos los controles? Esta acción no se puede deshacer.`)) return;
+
+  deleteAllStorageFiles().then(() => {
+    alert("Todos los archivos han sido eliminados.");
+    renderResults();
+  });
 }
 
 function updateAuthUI() {
@@ -451,6 +492,7 @@ function bindEvents() {
   });
 
   document.getElementById("exportBtn").addEventListener("click", exportResults);
+  document.getElementById("deleteAllFilesBtn").addEventListener("click", deleteAllFiles);
   document.getElementById("startFromHomeBtn").addEventListener("click", () => showPanel("setupPanel"));
   document.getElementById("resetBtn").addEventListener("click", resetAssessment);
 }
