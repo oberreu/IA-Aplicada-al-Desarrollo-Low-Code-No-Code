@@ -824,6 +824,148 @@ textarea:focus {
   margin-bottom: 4px;
 }
 
+/* Compliance Summary Table */
+.compliance-summary-table {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 2px;
+  margin-bottom: 20px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.cs-section {
+  padding: 18px;
+}
+
+.cs-section h4 {
+  margin: 0 0 14px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cs-green {
+  background: rgba(34, 197, 94, 0.08);
+  border-right: 1px solid var(--line);
+}
+
+.cs-green h4 {
+  color: var(--green);
+}
+
+.cs-yellow {
+  background: rgba(245, 158, 11, 0.08);
+  border-right: 1px solid var(--line);
+}
+
+.cs-yellow h4 {
+  color: var(--amber);
+}
+
+.cs-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.cs-status h4 {
+  color: var(--violet);
+}
+
+.cs-status-ok {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.cs-status-partial {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.cs-status-nc {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.cs-status-label {
+  font-size: 18px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.cs-status-ok .cs-status-label {
+  color: var(--green);
+}
+
+.cs-status-partial .cs-status-label {
+  color: var(--amber);
+}
+
+.cs-status-nc .cs-status-label {
+  color: var(--red);
+}
+
+.cs-status p {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.cs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cs-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 80px;
+}
+
+.cs-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.cs-value {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.cs-val-green {
+  color: var(--green);
+}
+
+.cs-val-red {
+  color: var(--red);
+}
+
+.cs-val-amber {
+  color: var(--amber);
+}
+
+.cs-val-big {
+  font-size: 36px;
+  color: var(--orange);
+}
+
+@media (max-width: 980px) {
+  .compliance-summary-table {
+    grid-template-columns: 1fr;
+  }
+  .cs-green,
+  .cs-yellow {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
 .results-grid {
   display: grid;
   grid-template-columns: 260px 1fr;

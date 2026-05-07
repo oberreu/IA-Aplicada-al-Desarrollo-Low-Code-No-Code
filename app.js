@@ -540,19 +540,60 @@ function renderResults() {
     `${state.setup.orgName || "Organización sin nombre"} · ${summary.answered}/${controls.length} controles respondidos · ${summary.level}`;
 
   document.getElementById("resultsContainer").innerHTML = `
+    <div class="compliance-summary-table">
+      <div class="cs-section cs-green">
+        <h4>Compliance Status Summary</h4>
+        <div class="cs-row">
+          <div class="cs-cell">
+            <span class="cs-label">Compliance Tasks [YES]</span>
+            <span class="cs-value cs-val-green">${summary.yesCount}</span>
+          </div>
+          <div class="cs-cell">
+            <span class="cs-label">Non-Compliance [NO]</span>
+            <span class="cs-value cs-val-red">${summary.noCount}</span>
+          </div>
+          <div class="cs-cell">
+            <span class="cs-label">Non-Compliance [Partial]</span>
+            <span class="cs-value cs-val-amber">${summary.partialCount}</span>
+          </div>
+          <div class="cs-cell">
+            <span class="cs-label">NC Total</span>
+            <span class="cs-value cs-val-red">${summary.ncTotal}</span>
+          </div>
+          <div class="cs-cell">
+            <span class="cs-label">Excepciones aprobadas [N/A]</span>
+            <span class="cs-value">${summary.naCount}</span>
+          </div>
+        </div>
+      </div>
+      <div class="cs-section cs-yellow">
+        <h4>Compliance</h4>
+        <div class="cs-row">
+          <div class="cs-cell">
+            <span class="cs-label">Compliance Level %</span>
+            <span class="cs-value cs-val-big">${summary.complianceLevel}%</span>
+          </div>
+          <div class="cs-cell">
+            <span class="cs-label">Maturity Level</span>
+            <span class="cs-value cs-val-big">${summary.maturity}</span>
+          </div>
+        </div>
+      </div>
+      <div class="cs-section cs-status cs-status-${summary.certStatus === 'Compliant' ? 'ok' : summary.certStatus === 'Partially Compliant' ? 'partial' : 'nc'}">
+        <h4>Certification Status</h4>
+        <span class="cs-status-label">${summary.certStatus}</span>
+        <p>Para certificar, la organización debe ser compliant con el 100% de los controles aplicables.</p>
+      </div>
+    </div>
+
     <div class="results-grid">
       <article class="result-card">
-        <p class="eyebrow">Progreso</p>
-        <div class="score">${summary.answered}<span class="score-total">/${controls.length}</span></div>
-        <span class="level">controles respondidos</span>
-        <div class="progress-track" style="margin-top:12px">
-          <div class="progress-bar" style="width:${Math.round(summary.answered / controls.length * 100)}%"></div>
-        </div>
-      </article>
-      <article class="result-card">
-        <p class="eyebrow">Score global</p>
+        <p class="eyebrow">Score ponderado</p>
         <div class="score" style="color:${scoreColor(summary.score)}">${summary.score}</div>
         <span class="level">${summary.level}</span>
+        <div class="progress-track" style="margin-top:12px">
+          <div class="progress-bar" style="width:${summary.score}%"></div>
+        </div>
       </article>
       <article class="result-card">
         <p class="eyebrow">Score por dominio</p>
@@ -608,13 +649,43 @@ function buildSummary() {
     score: calculateScore(controls.filter(control => control.domain === domain))
   }));
   const findings = buildFindings();
+
+  // Compliance counts
+  const yesCount = controls.filter(c => state.answers[c.id] === "YES").length;
+  const noCount = controls.filter(c => state.answers[c.id] === "NO").length;
+  const partialCount = controls.filter(c => state.answers[c.id] === "PARTIAL").length;
+  const naCount = controls.filter(c => state.answers[c.id] === "NA").length;
+  const ncTotal = noCount + partialCount;
+  const applicableControls = controls.length - naCount;
+  const complianceLevel = applicableControls > 0 ? Math.round((yesCount / applicableControls) * 100) : 0;
+
+  // Maturity level (1-5)
+  let maturity = 1;
+  if (complianceLevel >= 90) maturity = 5;
+  else if (complianceLevel >= 75) maturity = 4;
+  else if (complianceLevel >= 55) maturity = 3;
+  else if (complianceLevel >= 35) maturity = 2;
+
+  // Certification status
+  let certStatus = "Non-Compliant";
+  if (complianceLevel === 100) certStatus = "Compliant";
+  else if (complianceLevel >= 80) certStatus = "Partially Compliant";
+
   return {
     answered,
     score,
     level: maturityLevel(score, answered),
     domainScores,
     findings,
-    roadmap: buildRoadmap(findings)
+    roadmap: buildRoadmap(findings),
+    yesCount,
+    noCount,
+    partialCount,
+    naCount,
+    ncTotal,
+    complianceLevel,
+    maturity,
+    certStatus
   };
 }
 
