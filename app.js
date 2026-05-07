@@ -618,7 +618,7 @@ function renderControlsProgress() {
 function renderResults() {
   const summary = buildSummary();
   document.getElementById("resultsIntro").textContent =
-    `${state.setup.orgName || "Organización sin nombre"} · ${summary.answered}/${controls.length} controles respondidos · ${summary.level}`;
+    `${state.setup.orgName || "Organización sin nombre"} · ${summary.answered}/${controls.length} controles respondidos · Madurez: ${summary.maturityLevelValue} (${summary.maturityLevelLabel})`;
 
   document.getElementById("resultsContainer").innerHTML = `
     <div class="compliance-summary-table">
@@ -672,15 +672,15 @@ function renderResults() {
 
     <div class="results-grid">
       <article class="result-card">
-        <p class="eyebrow">Score ponderado</p>
-        <div class="score" style="color:${scoreColor(summary.score)}">${summary.score}</div>
-        <span class="level">${summary.level}</span>
+        <p class="eyebrow">Compliance Score</p>
+        <div class="score" style="color:${scoreColor(summary.complianceLevel)}">${summary.complianceLevel}%</div>
+        <span class="level">${summary.maturityLevelValue} – ${summary.maturityLevelLabel}</span>
         <div class="progress-track" style="margin-top:12px">
-          <div class="progress-bar" style="width:${summary.score}%"></div>
+          <div class="progress-bar" style="width:${summary.complianceLevel}%"></div>
         </div>
       </article>
       <article class="result-card">
-        <p class="eyebrow">Score por dominio</p>
+        <p class="eyebrow">Implementación por dominio</p>
         ${summary.domainScores.map(item => `
           <div class="metric-row">
             <strong>${shortDomain(item.domain)}</strong>
@@ -799,10 +799,13 @@ function buildSummary() {
   if (complianceLevel === 100) certStatus = "Compliant";
   else if (complianceLevel >= 80) certStatus = "Partially Compliant";
 
+  // SCF Maturity level label
+  const maturityLabels = { L0: "Inexistente", L1: "Ad Hoc", L2: "Definido", L3: "Gestionado", L4: "Optimizado" };
+  const maturityLevelLabel = maturityLabels[maturityLevelValue] || "Sin evaluar";
+
   return {
     answered,
     score,
-    level: maturityLevel(score, answered),
     domainScores,
     findings,
     roadmap: buildRoadmap(findings),
@@ -812,12 +815,11 @@ function buildSummary() {
     naCount,
     ncTotal,
     complianceLevel,
-    maturity,
     maturityLevelValue,
+    maturityLevelLabel,
     avgMaturityScore: Math.round(avgMaturityScore * 4 * 10) / 10,
     maturityAssessedCount: maturityAssessed.length,
-    domainMaturity,
-    certStatus
+    domainMaturity
   };
 }
 
@@ -833,10 +835,10 @@ function calculateScore(items) {
 
 function maturityLevel(score, answered) {
   if (!answered) return "Sin evaluación";
-  if (score >= 80) return "Madurez alta";
-  if (score >= 60) return "En desarrollo";
-  if (score >= 40) return "Inicial";
-  return "Básico / brecha crítica";
+  if (score >= 80) return "Compliant";
+  if (score >= 60) return "Parcialmente compliant";
+  if (score >= 40) return "En desarrollo";
+  return "No compliant";
 }
 
 function buildFindings() {
